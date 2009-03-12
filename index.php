@@ -27,26 +27,13 @@ if (!defined('PHPWS_SOURCE_DIR')) {
 }
 
 
-/*
-PHPWS_Core::initModClass('skeleton', 'Skeleton.php');
-$skeleton = new Skeleton;
-
-if (isset($_REQUEST['aop'])) {
-    $skeleton->adminMenu();
-} elseif (isset($_REQUEST['uop'])) {
-    $skeleton->userMenu();
-} elseif (isset($_REQUEST['id']) && isset($_REQUEST['bone_id'])) {
-    $skeleton->userMenu('view_bone');
-} elseif (isset($_REQUEST['id'])) {
-    $skeleton->userMenu('view_skeleton');
-} elseif (isset($_REQUEST['skeleton']) && isset($_REQUEST['bone'])) {
-    $skeleton->userMenu('view_bone');
-} elseif (isset($_REQUEST['skeleton'])) {
-    $skeleton->userMenu('view_skeleton');
-} else {
-    PHPWS_Core::home();
+# If there's no user session, or the user is not logged in, then return here
+if(!isset($_SESSION['User']) || !Current_User::isLogged()){
+    return;
 }
-*/
 
+
+PHPWS_Core::initModClass('faxmaster', 'Faxmaster.php');
+$fm = new Faxmaster();
 
 ?>

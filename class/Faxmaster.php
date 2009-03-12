@@ -8,6 +8,9 @@
 
 class Faxmaster{
 
+    public function __construct(){
+        Layout::add("hello world!");
+    }
 }
 
 ?>
