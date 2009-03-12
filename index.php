@@ -26,13 +26,20 @@ if (!defined('PHPWS_SOURCE_DIR')) {
     exit();
 }
 
+# Include configuration and defines
+PHPWS_Core::requireInc('faxmaster', 'defines.php');
+PHPWS_Core::requireInc('faxmaster', 'errordefines.php');
+PHPWS_Core::requireConfig('faxmaster');
 
-# If there's no user session, or the user is not logged in, then return here
+/* The user must be logged in to use this module. So, if
+ * there's no user session, or the user is not logged
+ * in, then return here
+ */
 if(!isset($_SESSION['User']) || !Current_User::isLogged()){
     return;
 }
 
-
+# Create the Faxmaster
 PHPWS_Core::initModClass('faxmaster', 'Faxmaster.php');
 $fm = new Faxmaster();
 
