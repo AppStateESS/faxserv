@@ -6,7 +6,7 @@
  * @author Jeremy Booker <jbooker at tux dot appstate dot edu>
  */
 
-class Faxmaster{
+class Faxmaster {
 
     public function __construct(){
        $this->handleRequest(); 
@@ -51,9 +51,18 @@ class Faxmaster{
         $fileName       = $_REQUEST['fileName'];
         $senderPhone    = $_REQUEST['senderPhone'];
 
-        # TODO make sure a fax with the given file name doesn't already exist
+        # Make sure a fax with the given file name doesn't already exist
+        if(Fax::getFaxInfoByFileName($fileName) != NULL){
+            # Either the fax already exists, or there was an error checking for it
+            # TODO
+            exit;
+        }
 
-        # TODO make sure the file actually exists (i.e. it was copied to the FAX_PATH successfully)
+        # Make sure the file actually exists (i.e. it was copied to the FAX_PATH successfully)
+        if(!file_exists(FAX_PATH . $fileName)){
+            # TODO, the file doesn't exist
+            exit;
+        }
 
         $fax = new Fax();
         $fax->setSenderPhone($senderPhone);
@@ -63,6 +72,7 @@ class Faxmaster{
         $result = $fax->save();
 
         # TODO pass the result back to the calling host, and have that host handle any errors
+        exit;
     }
 }
 

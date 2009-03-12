@@ -34,7 +34,7 @@ class Fax {
     {
         $db = new PHPWS_DB('faxmaster_fax');
         
-        if(PHPWS_Error::logIfError($db->saveObject($this)){
+        if(PHPWS_Error::logIfError($db->saveObject($this))){
             return false;
         }
 
@@ -111,7 +111,7 @@ class Fax {
     }
 
     public function setId($id){
-        $this->id = $id
+        $this->id = $id;
     }
 
     public function getSenderPhone(){
@@ -140,6 +140,23 @@ class Fax {
 
     public function getTags(){
         return $this->tags;
+    }
+
+    /******************
+     * Static methods *
+     ******************/
+
+    public static function getFaxInfoByFileName($filename)
+    {
+        $db = new PHPWS_DB('faxmaster_fax');
+        $db->addWhere('fileName', $filename);
+        $result = $db->select('row');
+
+        if(PHPWS_Error::logIfError($result)){
+            return false;
+        }
+
+        return $result;
     }
 }
 
