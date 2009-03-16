@@ -12,6 +12,7 @@ class Fax {
 
     public $senderPhone     = NULL;
     public $fileName        = NULL;
+    public $dateReceived    = NULL;  // The date (integer unix timestamp) when the fax was received
 
     public $state           = NULL;  // values defined in inc/defines.php
 
@@ -96,9 +97,11 @@ class Fax {
     public function pagerRowTags(){
         $tpl = array();
         $tpl['id'] = $this->getID();
-        $tpl['senderPhone'] = $this->getSenderPhone();
-        $tpl['fileName']    = $this->getFileName();
-        $tpl['state']       = $this->getState() == 0 ? "Read" : "New";
+        $tpl['senderPhone']     = $this->getSenderPhone();
+        $tpl['fileName']        = $this->getFileName();
+        $tpl['dateReceived']    = $this->getDateReceivedFormatted();
+        $tpl['state']           = $this->getState() == 0 ? "Read" : "New";
+        $tpl['actions']         = '';
 
         return $tpl;
     }
@@ -128,6 +131,18 @@ class Fax {
 
     public function setFileName($name){
         $this->fileName = $name;
+    }
+
+    public function getDateReceived(){
+        return $this->dateReceived;
+    }
+
+    public function getDateReceivedFormatted(){
+        return date('n/d/y g:i A', $this->dateReceived);
+    }
+
+    public function setDateReceived($timestamp){
+        $this->dateReceived = $timestamp;
     }
 
     public function getState(){

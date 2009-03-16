@@ -16,9 +16,8 @@ class Faxmaster {
      * Controller - handles all requests and determines which control method to call
      */
     private function handleRequest(){
-
         if(!isset($_REQUEST['op'])){
-            $this->noOp();
+            $this->showFaxes();
             return;
         }
 
@@ -27,7 +26,7 @@ class Faxmaster {
                 $this->newFax();
                 break;
             default:
-                $this->noOp();
+                $this->showFaxes();
         }
     }
 
@@ -68,11 +67,21 @@ class Faxmaster {
         $fax->setSenderPhone($senderPhone);
         $fax->setFileName($fileName);
         $fax->setState(FAX_STATE_NEW);
+        $fax->setDateReceived(time());
 
         $result = $fax->save();
 
         # TODO pass the result back to the calling host, and have that host handle any errors
         exit;
+    }
+
+    /**
+     * A function that shows a db pager of all faxes
+     */
+    private function showFaxes(){
+        PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+        $pager = new FaxPager();
+        $pager->show();
     }
 }
 
