@@ -69,7 +69,7 @@ class Faxmaster {
         $fax = new Fax();
         $fax->setSenderPhone($senderPhone);
         $fax->setFileName($fileName);
-        $fax->setState(FAX_STATE_NEW);
+        $fax->markAsUnread();
         $fax->setDateReceived(time());
 
         $result = $fax->save();
@@ -97,6 +97,9 @@ class Faxmaster {
         $fax = new Fax($_REQUEST['id']);
 
         //TODO make sure that fax actually exists, show an error otherwise
+
+        // Mark the fax as being read
+        $fax->markAsRead();
 
         // Create the necessary view, telling it which fax to show
         $view = new FaxDownload($fax);

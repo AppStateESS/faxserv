@@ -69,6 +69,31 @@ class Fax {
     }
 
     /**
+     * Returns true if the fax is new (unread), false otherwise
+     */
+    public function isNew(){
+        return $this->getState() == FAX_STATE_NEW ? true : false;
+    }
+    
+    /**
+     * Marks this fax as having been read, and saves it to the db
+     */
+    public function markAsRead(){
+        $this->setState(FAX_STATE_READ);
+        $this->save();
+        //TODO error checking here
+    }
+
+    /**
+     * Marks this fax as being unread, and saves it to the db
+     */
+    public function markAsUnread(){
+        $this->setState(FAX_STATE_NEW);
+        $this->save();
+        // TODO error checking here
+    }
+
+    /**
      * Loads all the tags associated with this fax
      */
     public function loadTags(){
@@ -105,8 +130,8 @@ class Fax {
         $tpl['senderPhone']     = $this->getSenderPhone();
         $tpl['fileName']        = $this->getFileName();
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
-        $tpl['state']           = $this->getState() == 0 ? "Read" : "New";
         $tpl['actions']         = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
+        $tpl['new'] = $this->isNew() ? 'style="font-weight: bold"' : '';
 
         return $tpl;
     }
@@ -157,6 +182,8 @@ class Fax {
     public function setState($state){
         $this->state = $state;
     }
+
+    
 
     public function getTags(){
         return $this->tags;

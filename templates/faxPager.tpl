@@ -11,7 +11,7 @@
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE>
+    <tr {TOGGLE} {new}>
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>
