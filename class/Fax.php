@@ -127,7 +127,7 @@ class Fax {
     public function pagerRowTags(){
         $tpl = array();
         $tpl['id'] = $this->getID();
-        $tpl['senderPhone']     = $this->getSenderPhone();
+        $tpl['senderPhone']     = $this->getSenderPhoneFormatted();
         $tpl['fileName']        = $this->getFileName();
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
         $tpl['actions']         = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
@@ -149,6 +149,14 @@ class Fax {
 
     public function getSenderPhone(){
         return $this->senderPhone;
+    }
+
+    public function getSenderPhoneFormatted(){
+        $number = '('.substr($this->senderPhone, 0, 3).')';
+        $number .= substr($this->senderPhone, 3, 3);
+        $number .= '-'.substr($this->senderPhone, 6, 4);
+
+        return $number;
     }
 
     public function setSenderPhone($phone){
