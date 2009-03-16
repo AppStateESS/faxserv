@@ -1,4 +1,4 @@
-<table>
+<table cellpadding="3">
     <tr>
         <th>File Name</th>
         <th>Sender Phone</th>
