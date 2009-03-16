@@ -25,6 +25,9 @@ class Faxmaster {
             case 'new_fax':
                 $this->newFax();
                 break;
+            case 'download_fax':
+                $this->downloadFax();
+                break;
             default:
                 $this->showFaxes();
         }
@@ -82,6 +85,22 @@ class Faxmaster {
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
         $pager = new FaxPager();
         $pager->show();
+    }
+
+    /**
+     * Handles the request to download a particlar fax
+     */
+    private function downloadFax(){
+        PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+        PHPWS_Core::initModClass('faxmaster', 'FaxDownload.php');
+
+        $fax = new Fax($_REQUEST['id']);
+
+        //TODO make sure that fax actually exists, show an error otherwise
+
+        // Create the necessary view, telling it which fax to show
+        $view = new FaxDownload($fax);
+        $view->show();
     }
 }
 

@@ -26,6 +26,11 @@ class Fax {
         }
 
         $this->id = (int)$id;
+        $db = new PHPWS_DB('faxmaster_fax');
+        
+        if(PHPWS_Error::logIfError($db->loadObject($this))){
+            $this->id = 0;
+        }
     }
 
     /**
@@ -101,7 +106,7 @@ class Fax {
         $tpl['fileName']        = $this->getFileName();
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
         $tpl['state']           = $this->getState() == 0 ? "Read" : "New";
-        $tpl['actions']         = '';
+        $tpl['actions']         = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
 
         return $tpl;
     }
