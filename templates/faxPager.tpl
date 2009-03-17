@@ -2,7 +2,7 @@
     <tr>
         <th>File Name</th>
         <th>Sender Phone</th>
-        <th>Date Received</th>
+        <th>Date Received{DATERECEIVED_SORT}</th>
         <th>Printed</th>
         <th>Action</th>
     </tr>
@@ -21,4 +21,10 @@
     </tr>
     <!-- END listrows -->
 </table>
+<div class="align-center">
+    {TOTAL_ROWS}<br />
+    {PAGE_LABEL} {PAGES}<br />
+    {LIMIT_LABEL} {LIMITS}<br />
+    {CSV_REPORT}
+</div>
 

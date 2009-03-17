@@ -17,6 +17,8 @@ class FaxPager {
         $this->pager->setTemplate('faxPager.tpl');
         $this->pager->setLink('index.php?module=faxmaster');
 
+        $this->pager->setEmptyMessage('No faxes found.');
+
         $this->pager->addToggle('class="toggle1"');
         $this->pager->addToggle('class="toggle2"');
         $this->pager->addRowTags('pagerRowTags');
