@@ -3,6 +3,7 @@
         <th>File Name</th>
         <th>Sender Phone</th>
         <th>Date Received</th>
+        <th>Printed</th>
         <th>Action</th>
     </tr>
     <!-- BEGIN empty_table -->
@@ -15,6 +16,7 @@
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>
+        <td>{printed}</td>
         <td>{actions}</td>
     </tr>
     <!-- END listrows -->

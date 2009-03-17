@@ -15,6 +15,7 @@ class Fax {
     public $dateReceived    = NULL;  // The date (integer unix timestamp) when the fax was received
 
     public $state           = NULL;  // values defined in inc/defines.php
+    public $printed         = NULL;  // boolean, whether or not the fax has been printed.
 
     public $tags            = NULL;  // An array of string "tags" for this fax
 
@@ -93,6 +94,11 @@ class Fax {
         // TODO error checking here
     }
 
+    public function markAsPrinted(){
+        $this->setPrinted(true);
+        $this->save();
+    }
+
     /**
      * Loads all the tags associated with this fax
      */
@@ -130,8 +136,13 @@ class Fax {
         $tpl['senderPhone']     = $this->getSenderPhoneFormatted();
         $tpl['fileName']        = $this->getFileName();
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
-        $tpl['actions']         = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
-        $tpl['new'] = $this->isNew() ? 'style="font-weight: bold"' : '';
+        $tpl['printed']         = $this->isPrinted() ? 'Yes': 'No';
+        $tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
+
+        $actions[] = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
+        $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
+
+        $tpl['actions']         = implode(' ', $actions);
 
         return $tpl;
     }
@@ -191,7 +202,13 @@ class Fax {
         $this->state = $state;
     }
 
-    
+    public function isPrinted(){
+        return $this->printed;
+    }
+
+    public function setPrinted($state){
+        $this->printed = (int)$state;
+    }
 
     public function getTags(){
         return $this->tags;

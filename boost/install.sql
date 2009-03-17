@@ -6,5 +6,6 @@ CREATE TABLE faxmaster_fax (
     fileName VARCHAR( 32 ) NOT NULL,
     state INT NOT NULL,
     dateReceived INT NOT NULL,
+    printed INT NOT NULL,
     PRIMARY KEY (id)
 );

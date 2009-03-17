@@ -28,6 +28,9 @@ class Faxmaster {
             case 'download_fax':
                 $this->downloadFax();
                 break;
+            case 'mark_fax_printed':
+                $this->markFaxPrinted();
+                break;
             default:
                 $this->showFaxes();
         }
@@ -81,7 +84,8 @@ class Faxmaster {
     /**
      * A function that shows a db pager of all faxes
      */
-    private function showFaxes(){
+    private function showFaxes()
+    {
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
         $pager = new FaxPager();
         $pager->show();
@@ -90,7 +94,8 @@ class Faxmaster {
     /**
      * Handles the request to download a particlar fax
      */
-    private function downloadFax(){
+    private function downloadFax()
+    {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
         PHPWS_Core::initModClass('faxmaster', 'FaxDownload.php');
 
@@ -103,6 +108,19 @@ class Faxmaster {
 
         // Create the necessary view, telling it which fax to show
         $view = new FaxDownload($fax);
+        $view->show();
+    }
+
+    private function markFaxPrinted()
+    {
+        PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+        PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+
+        $fax = new Fax($_REQUEST['id']);
+
+        $fax->markAsPrinted();
+
+        $view = new FaxPager();
         $view->show();
     }
 }
