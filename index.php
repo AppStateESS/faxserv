@@ -35,7 +35,7 @@ PHPWS_Core::requireConfig('faxmaster');
  * there's no user session, or the user is not logged
  * in, then return here
  */
-if(!isset($_SESSION['User']) || !Current_User::isLogged()){
+if(!isset($_SESSION['User']) || !Current_User::isLogged() && $_REQUEST['op'] != 'new_fax'){
     return;
 }
 
