@@ -13,6 +13,9 @@ class FaxPager {
 
         $this->pager = new DBPager('faxmaster_fax', 'Fax');
 
+        // By default, sort the faxes in reverse chronological order
+        $this->pager->setOrder('dateReceived', 'DESC', true);
+
         $this->pager->setModule('faxmaster');
         $this->pager->setTemplate('faxPager.tpl');
         $this->pager->setLink('index.php?module=faxmaster');
