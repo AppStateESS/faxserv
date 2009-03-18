@@ -20,13 +20,51 @@ class Fax {
     public $tags            = NULL;  // An array of string "tags" for this fax
 
 
-    public function __construct($id = 0)
+    /**
+     * Constructor for loading an existing fax
+     */
+    public function __construct($id = 0, $senderPhone = NULL, $fileName = NULL, $dateReceived = NULL)
     {
-        if(!$id){
+        /**
+         * If the id is non-zero, then we need to load the other member variables 
+         * of this object from the database
+         */
+        if($id != 0){
+            $this->id = (int)$id;
+            $this->load();
             return;
         }
 
-        $this->id = (int)$id;
+
+        /*
+         * From here down handles creating a *new* fax object
+         */
+        if(is_null($senderPhone) || !isset($senderPhone) || $sednerPhone == ''){
+            $this->senderPhone = '';
+        }else{
+            $this->senderPhone = $senderPhone;
+        }
+
+        $this->fileName = $fileName;
+
+        // If dateReceived param is null, then get the current timestamp
+        $this->dateReceived = is_null($dateReceived) ? time() : $dateReceived;
+
+        $this->setState(FAX_STATE_NEW);
+        $this->setPrinted(false);
+
+        return;
+    }
+
+    /**
+     * Loads the Fax object with the corresponding id. Requires that $this->id be non-zero.
+     */
+    private function load()
+    {
+        if($this->id == 0){
+            return;
+        }
+
         $db = new PHPWS_DB('faxmaster_fax');
         
         if(PHPWS_Error::logIfError($db->loadObject($this))){
@@ -163,9 +201,20 @@ class Fax {
     }
 
     public function getSenderPhoneFormatted(){
-        $number = '('.substr($this->senderPhone, 0, 3).')';
-        $number .= substr($this->senderPhone, 3, 3);
-        $number .= '-'.substr($this->senderPhone, 6, 4);
+        // Make sure this looks like a valid 10 digit phone number, and format it accordingly
+        if(preg_match('/[0-9]{10}/', $this->senderPhone)){
+            $number = '('.substr($this->senderPhone, 0, 3).')';
+            $number .= substr($this->senderPhone, 3, 3);
+            $number .= '-'.substr($this->senderPhone, 6, 4);
+
+        // Or if looks like a valid 3 digit area code
+        }else if(preg_match('/[0-9]{3}/', $this->senderPhone)){
+            $number = '(' . $this->senderPhone . ') - Unknown';
+
+        // Otherwise, we don't know what's going on here
+        }else{
+            $number = 'Unknown';
+        }
 
         return $number;
     }
