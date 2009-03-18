@@ -69,12 +69,7 @@ class Faxmaster {
             exit;
         }
 
-        $fax = new Fax();
-        $fax->setSenderPhone($senderPhone);
-        $fax->setFileName($fileName);
-        $fax->markAsUnread();
-        $fax->setDateReceived(time());
-
+        $fax = new Fax(0, $senderPhone, $fileName);
         $result = $fax->save();
 
         # TODO pass the result back to the calling host, and have that host handle any errors
