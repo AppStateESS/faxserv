@@ -39,7 +39,7 @@ class Fax {
         /*
          * From here down handles creating a *new* fax object
          */
-        if(is_null($senderPhone) || !isset($senderPhone) || $sednerPhone == ''){
+        if(is_null($senderPhone) || !isset($senderPhone) || $senderPhone == ''){
             $this->senderPhone = '';
         }else{
             $this->senderPhone = $senderPhone;
