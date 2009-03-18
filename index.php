@@ -31,6 +31,8 @@ PHPWS_Core::requireInc('faxmaster', 'defines.php');
 PHPWS_Core::requireInc('faxmaster', 'errordefines.php');
 PHPWS_Core::requireConfig('faxmaster');
 
+Layout::addStyle('faxmaster');
+
 /* The user must be logged in to use this module. So, if
  * there's no user session, or the user is not logged
  * in, then return here

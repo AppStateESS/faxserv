@@ -22,8 +22,8 @@ class FaxPager {
 
         $this->pager->setEmptyMessage('No faxes found.');
 
-        $this->pager->addToggle('class="toggle1"');
-        $this->pager->addToggle('class="toggle2"');
+        $this->pager->addToggle('class="bgcolor1"');
+        $this->pager->addToggle('class="bgcolor2"');
         $this->pager->addRowTags('pagerRowTags');
     }
 
