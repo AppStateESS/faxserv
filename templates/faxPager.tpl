@@ -1,4 +1,4 @@
-<table cellpadding="3">
+<table class="faxmaster_faxPager" cellpadding="2">
     <tr>
         <th>File Name</th>
         <th>Sender Phone</th>
