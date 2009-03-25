@@ -3,7 +3,6 @@
         <th>File Name</th>
         <th>Sender Phone</th>
         <th>Date Received{DATERECEIVED_SORT}</th>
-        <th>Printed</th>
         <th>Action</th>
     </tr>
     <!-- BEGIN empty_table -->
@@ -12,11 +11,10 @@
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE} {new}>
+    <tr {TOGGLE} {printed}>
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>
-        <td>{printed}</td>
         <td>{actions}</td>
     </tr>
     <!-- END listrows -->

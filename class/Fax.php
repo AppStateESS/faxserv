@@ -172,12 +172,11 @@ class Fax {
         $tpl = array();
         $tpl['id'] = $this->getID();
         $tpl['senderPhone']     = $this->getSenderPhoneFormatted();
-        $tpl['fileName']        = $this->getFileName();
+        $tpl['fileName']        = PHPWS_Text::secureLink($this->getFileName(), 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId()));
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
-        $tpl['printed']         = $this->isPrinted() ? 'Yes': 'No';
-        $tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
+        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"';
+        //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
 
-        $actions[] = '[' . PHPWS_Text::secureLink('Download', 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId())) . ']';
         $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
 
         $tpl['actions']         = implode(' ', $actions);
@@ -201,14 +200,20 @@ class Fax {
     }
 
     public function getSenderPhoneFormatted(){
+        if(preg_match('/^[0-9]{11}$/', $this->senderPhone)){
+            // This looks like a valid 11 digit phone number 1-<area code>-, etc...
+            $number = substr($this->senderPhone, 0, 1);
+            $number .= '('.substr($this->senderPhone, 1, 3).')';
+            $number .= substr($this->senderPhone, 2, 3);
+            $number .= '-'.substr($this->senderPhone, 5, 4);
+        }else if(preg_match('/^[0-9]{10}$/', $this->senderPhone)){
         // Make sure this looks like a valid 10 digit phone number, and format it accordingly
-        if(preg_match('/[0-9]{10}/', $this->senderPhone)){
             $number = '('.substr($this->senderPhone, 0, 3).')';
             $number .= substr($this->senderPhone, 3, 3);
             $number .= '-'.substr($this->senderPhone, 6, 4);
 
         // Or if looks like a valid 3 digit area code
-        }else if(preg_match('/[0-9]{3}/', $this->senderPhone)){
+        }else if(preg_match('/^[0-9]{3}$/', $this->senderPhone)){
             $number = '(' . $this->senderPhone . ') - Unknown';
 
         // Otherwise, we don't know what's going on here
