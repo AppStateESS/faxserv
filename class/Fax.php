@@ -234,6 +234,13 @@ class Fax {
         return $this->fileName;
     }
 
+    /**
+     * Returns the full path to the PDF file for this fax object
+     */
+    public function getFullPath(){
+        return FAX_PATH . $this->getFileName();
+    }
+
     public function setFileName($name){
         $this->fileName = $name;
     }
@@ -292,12 +299,12 @@ class Fax {
      */
     public static function countPages($fax)
     {
-        if(!file_exists($fax->getFileName())){
+        if(!file_exists($fax->getFullPath())){
             return null;
         }
 
         //open the file for reading
-        $handle = @fopen($fax->getFileName(), "rb");
+        $handle = @fopen($fax->getFullPath(), "rb");
 
         if(!$handle){
             return null;
