@@ -24,4 +24,5 @@
 //PHPWS_Core::initModClass('skeleton', 'Skeleton_Runtime.php');
 //Skeleton_Runtime::showBlock();
 
+PHPWS_Core::initModClass('faxmaster', '../index.php');
 ?>
