@@ -31,20 +31,13 @@ class Faxmaster {
             case 'mark_fax_printed':
                 $this->markFaxPrinted();
                 break;
+            case 'set_name_id':
+                $this->setNameId();
+                break;
             default:
                 $this->showFaxes();
         }
     }
-
-    /**
-     * Called by the controller when there is no 'op' field defined
-     * in the HTTP request, or the value of the field is not recognized
-     */
-    private function noOp()
-    {
-        PHPWS_Core::home();
-    }
-
 
     /**
      * Handles new, incoming faxes. Does some error checking, creates
@@ -117,6 +110,28 @@ class Faxmaster {
 
         $view = new FaxPager();
         $view->show();
+    }
+
+    private function setNameId()
+    {
+        PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+
+        $fax = new Fax($_REQUEST['id']);
+
+        if(isset($_REQUEST['firstName'])){
+            $fax->setFirstName($_REQUEST['firstName']);
+        }
+
+        if(isset($_REQUEST['lastName'])){
+            $fax->setLastName($_REQUEST['lastName']);
+        }
+
+        if(isset($_REQUEST['bannerId'])){
+            $fax->setBannerId($_REQUEST['bannerId']);
+        }
+
+        echo $fax->save();
+        exit;
     }
 }
 

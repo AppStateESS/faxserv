@@ -28,6 +28,8 @@ class FaxPager {
     }
 
     public function show(){
+        javascript('/jquery/');
+        javascript('/jquery_ui/');
         Layout::add($this->pager->get());
     }
 }

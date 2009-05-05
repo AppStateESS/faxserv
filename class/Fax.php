@@ -14,6 +14,10 @@ class Fax {
     public $fileName        = NULL;
     public $dateReceived    = NULL;  // The date (integer unix timestamp) when the fax was received
 
+    public $firstName       = NULL;  // The first and last name of the student whom this fax belongs to
+    public $lastName        = NULL;
+    public $bannerId        = NULL;  // The Banner ID number of the student whom this fax belongs to
+
     public $state           = NULL;  // values defined in inc/defines.php
     public $printed         = NULL;  // boolean, whether or not the fax has been printed.
 
@@ -80,7 +84,7 @@ class Fax {
     public function save()
     {
         $db = new PHPWS_DB('faxmaster_fax');
-        
+
         if(PHPWS_Error::logIfError($db->saveObject($this))){
             return false;
         }
@@ -172,13 +176,18 @@ class Fax {
      */
     public function pagerRowTags(){
         $tpl = array();
+
         $tpl['id'] = $this->getID();
         $tpl['senderPhone']     = $this->getSenderPhoneFormatted();
         $tpl['fileName']        = PHPWS_Text::secureLink($this->getFileName(), 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId()));
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
+        $tpl['bannerId']        = is_null($this->getBannerId()) ? '' : $this->getBannerId();
+        $tpl['name']            = $this->getName();
+
         $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"';
         //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
 
+        $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
         $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
 
         $tpl['actions']         = implode(' ', $actions);
@@ -255,6 +264,34 @@ class Fax {
 
     public function setDateReceived($timestamp){
         $this->dateReceived = $timestamp;
+    }
+
+    public function getFirstName(){
+        return $this->firstName;
+    }
+
+    public function setFirstName($name){
+        $this->firstName = $name;
+    }
+
+    public function getLastName(){
+        return $this->lastName;
+    }
+
+    public function setLastName($name){
+        $this->lastName = $name;
+    }
+
+    public function getName(){
+        return $this->getFirstName() . ' ' . $this->getLastName();
+    }
+
+    public function getBannerId(){
+        return $this->bannerId;
+    }
+
+    public function setBannerId($id){
+        $this->bannerId = $id;
     }
 
     public function getState(){
