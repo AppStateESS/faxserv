@@ -63,6 +63,10 @@ function handleDialogCancel()
 
 </script>
 
+<div align="right">
+    {SEARCH}
+</div>
+
 <table class="faxmaster_faxPager" cellpadding="2">
     <tr>
         <th>File Name</th>
