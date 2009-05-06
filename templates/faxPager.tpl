@@ -70,6 +70,7 @@ function handleDialogCancel()
         <th>Date Received{DATERECEIVED_SORT}</th>
         <th>Banner ID</th>
         <th>Name</th>
+        <th>Pages</th>
         <th>Action</th>
     </tr>
     <!-- BEGIN empty_table -->
@@ -84,6 +85,7 @@ function handleDialogCancel()
         <td>{dateReceived}</td>
         <td id="{id}_bannerid">{bannerId}</td>
         <td id="{id}_name">{name}</td>
+        <td>{numPages}</td>
         <td>{actions}</td>
     </tr>
     <!-- END listrows -->

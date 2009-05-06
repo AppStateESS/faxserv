@@ -5,7 +5,7 @@ CREATE TABLE faxmaster_fax (
     senderPhone VARCHAR( 15 ) NOT NULL,
     fileName VARCHAR( 32 ) NOT NULL,
     dateReceived INTEGER NOT NULL,
-    pages INTEGER,
+    numPages INTEGER default 0,
     firstName VARCHAR( 64 ),
     lastName VARCHAR( 64 ),
     bannerId VARCHAR( 9 ),

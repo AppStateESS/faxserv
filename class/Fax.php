@@ -13,6 +13,7 @@ class Fax {
     public $senderPhone     = NULL;
     public $fileName        = NULL;
     public $dateReceived    = NULL;  // The date (integer unix timestamp) when the fax was received
+    public $numPages        = NULL;  // The number of pages included in this fax
 
     public $firstName       = NULL;  // The first and last name of the student whom this fax belongs to
     public $lastName        = NULL;
@@ -187,6 +188,8 @@ class Fax {
         $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"';
         //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
 
+        $tpl['numPages']        = $this->getNumPages();
+
         $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
         $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
 
@@ -264,6 +267,14 @@ class Fax {
 
     public function setDateReceived($timestamp){
         $this->dateReceived = $timestamp;
+    }
+
+    public function getNumPages(){
+        return $this->numPages;
+    }
+
+    public function setNumPages($num){
+        $this->numPages = $num;
     }
 
     public function getFirstName(){
