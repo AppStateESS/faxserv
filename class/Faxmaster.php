@@ -63,7 +63,7 @@ class Faxmaster {
         }
 
         $fax = new Fax(0, $senderPhone, $fileName);
-        $this->setNumPages(Fax::countPages($fax));
+        $fax->setNumPages(Fax::countPages($fax));
         $result = $fax->save();
 
         # TODO pass the result back to the calling host, and have that host handle any errors
