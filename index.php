@@ -37,7 +37,7 @@ Layout::addStyle('faxmaster');
  * there's no user session, or the user is not logged
  * in, then return here
  */
-if(!isset($_SESSION['User']) || !Current_User::isLogged() && $_REQUEST['op'] != 'new_fax'){
+if((!isset($_SESSION['User']) || !Current_User::isLogged()) && (!isset($_REQUEST['op']) || $_REQUEST['op'] != 'new_fax')){
     return;
 }
 
