@@ -6,23 +6,28 @@
  * @author Jeremy Booker <jbooker at tux dot appstate dot edu>
  */
 
-class Fax {
+PHPWS_Core::initModClass('tag', 'Taggable.php');
+
+class Fax implements Taggable{
 
     public $id = 0;
 
     public $senderPhone     = NULL;
     public $fileName        = NULL;
-    public $dateReceived    = NULL;  // The date (integer unix timestamp) when the fax was received
-    public $numPages        = NULL;  // The number of pages included in this fax
+    public $dateReceived    = NULL; // The date (integer unix timestamp) when the fax was received.
+    public $numPages        = NULL; // The number of pages included in this fax.
 
-    public $firstName       = NULL;  // The first and last name of the student whom this fax belongs to
+    public $firstName       = NULL; // The first and last name of the student whom this fax belongs to.
     public $lastName        = NULL;
-    public $bannerId        = NULL;  // The Banner ID number of the student whom this fax belongs to
+    public $bannerId        = NULL; // The Banner ID number of the student whom this fax belongs to.
 
-    public $state           = NULL;  // values defined in inc/defines.php
-    public $printed         = NULL;  // boolean, whether or not the fax has been printed.
+    public $state           = NULL; // The state this fax is in. Values defined in inc/defines.php.
+    public $printed         = NULL; // boolean, whether or not the fax has been printed.
 
-    public $tags            = NULL;  // An array of string "tags" for this fax
+    public $keyId          = NULL; // The key_id of the Key object corresponding to this object. Used to create the Key object.
+
+
+    private $key            = NULL; // Holds the Key object for this fax. This field is not stored in the database.
 
 
     /**
@@ -76,6 +81,11 @@ class Fax {
         
         if(PHPWS_Error::logIfError($db->loadObject($this))){
             $this->id = 0;
+        }
+
+        // Try to load the key for this object as well
+        if(isset($this->getKeyId())){
+            $this->setKey(new Key($this->getKeyId()));
         }
     }
 
@@ -144,32 +154,13 @@ class Fax {
         $this->save();
     }
 
-    /**
-     * Loads all the tags associated with this fax
-     */
-    public function loadTags(){
-        # TODO
-    }
-
-    /**
-     * Associates the given tag name with this fax
-     */
-    public function addTag($tagName){
-        # TODO
-    }
-
-    /**
-     * Removes the association between this fax and the given tag name
-     */
-    public function removeTag($tagName){
-        # TODO
-    }
-
-    /**
-     * Returns true if the given tag name is associated with this fax
-     */
-    public function isTagged($tagName){
-        # TODO
+    public function getKey()
+    {
+       if(is_null($this->key)){
+           $key = new Key;
+       }else{
+            
+       }
     }
 
     /**
@@ -185,7 +176,7 @@ class Fax {
         $tpl['bannerId']        = is_null($this->getBannerId()) ? '' : $this->getBannerId();
         $tpl['name']            = $this->getName();
 
-        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"';
+        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"; color: red;';
         //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
 
         $tpl['numPages']        = $this->getNumPages();
@@ -321,8 +312,16 @@ class Fax {
         $this->printed = (int)$state;
     }
 
-    public function getTags(){
-        return $this->tags;
+    public function getKeyId(){
+        return $this->keyId;
+    }
+
+    private function setKeyId($id){
+        $this->keyId = $id;
+    }
+
+    private function setKey(Key $key){
+        $this->key = $key;
     }
 
     /******************
