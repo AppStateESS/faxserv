@@ -84,9 +84,9 @@ class Fax implements Taggable{
         }
 
         // Try to load the key for this object as well
-        if(isset($this->getKeyId())){
-            $this->setKey(new Key($this->getKeyId()));
-        }
+        //if(isset($this->getKeyId())){
+        //    $this->setKey(new Key($this->getKeyId()));
+        //}
     }
 
     /**
