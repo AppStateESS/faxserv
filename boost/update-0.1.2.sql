@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE faxmaster_fax ADD COLUMN hidden INTEGER NOT NULL default 0;
+
+COMMIT;

@@ -11,5 +11,6 @@ CREATE TABLE faxmaster_fax (
     bannerId VARCHAR( 9 ),
     state INTEGER NOT NULL,
     printed INTEGER NOT NULL,
+    hidden INTEGER NOT NULL default 0,
     PRIMARY KEY (id)
 );

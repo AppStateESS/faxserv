@@ -25,6 +25,7 @@ class FaxPager {
         $this->pager->addToggle('class="bgcolor1"');
         $this->pager->addToggle('class="bgcolor2"');
         $this->pager->addRowTags('pagerRowTags');
+        $this->pager->addWhere('hidden', 0);
 
         $this->pager->setSearch('bannerId', 'firstName', 'lastName');
     }

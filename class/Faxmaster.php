@@ -34,6 +34,9 @@ class Faxmaster {
             case 'set_name_id':
                 $this->setNameId();
                 break;
+            case 'mark_fax_hidden':
+                $this->markFaxHidden();
+                break;
             default:
                 $this->showFaxes();
         }
@@ -133,6 +136,18 @@ class Faxmaster {
 
         echo $fax->save();
         exit;
+    }
+
+    private function markFaxHidden() {
+        PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+        PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+
+        $fax = new Fax($_REQUEST['id']);
+
+        $fax->markAsHidden();
+
+        $view = new FaxPager();
+        $view->show();
     }
 }
 

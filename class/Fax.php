@@ -6,11 +6,9 @@
  * @author Jeremy Booker <jbooker at tux dot appstate dot edu>
  */
 
-//PHPWS_Core::initModClass('tag', 'Taggable.php');
+PHPWS_Core::initModClass('tag', 'Taggable.php');
 
-//class Fax implements Taggable{
-
-class Fax {
+class Fax implements Taggable{
 
     public $id = 0;
 
@@ -25,6 +23,7 @@ class Fax {
 
     public $state           = NULL; // The state this fax is in. Values defined in inc/defines.php.
     public $printed         = NULL; // boolean, whether or not the fax has been printed.
+    public $hidden          = NULL; // boolean, if the fax should be displayed or not
 
     public $keyId          = NULL; // The key_id of the Key object corresponding to this object. Used to create the Key object.
 
@@ -86,9 +85,9 @@ class Fax {
         }
 
         // Try to load the key for this object as well
-        //if(isset($this->getKeyId())){
-        //    $this->setKey(new Key($this->getKeyId()));
-        //}
+        if(isset($this->getKeyId())){
+            $this->setKey(new Key($this->getKeyId()));
+        }
     }
 
     /**
@@ -156,6 +155,11 @@ class Fax {
         $this->save();
     }
 
+    public function markAsHidden(){
+        $this->setHidden(true);
+        $this->save();
+    }
+
     public function getKey()
     {
        if(is_null($this->key)){
@@ -180,11 +184,12 @@ class Fax {
 
         $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"; color: red;';
         //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
-
+        
         $tpl['numPages']        = $this->getNumPages();
 
         $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
         $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
+        $actions[] = '[' . PHPWS_Text::secureLink('Hide', 'faxmaster', array('op'=>'mark_fax_hidden', 'id'=>$this->getId())) . ']';
 
         $tpl['actions']         = implode(' ', $actions);
 
@@ -324,6 +329,10 @@ class Fax {
 
     private function setKey(Key $key){
         $this->key = $key;
+    }
+
+    private function setHidden($state) {
+        $this->hidden = $state;
     }
 
     /******************
