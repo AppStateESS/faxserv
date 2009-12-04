@@ -6,9 +6,10 @@
  * @author Jeremy Booker <jbooker at tux dot appstate dot edu>
  */
 
-PHPWS_Core::initModClass('tag', 'Taggable.php');
+//PHPWS_Core::initModClass('tag', 'Taggable.php');
 
-class Fax implements Taggable{
+//class Fax implements Taggable{
+class Fax {
 
     public $id = 0;
 
