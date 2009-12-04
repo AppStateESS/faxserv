@@ -86,9 +86,11 @@ class Fax {
         }
 
         // Try to load the key for this object as well
+        /*
         if(isset($this->getKeyId())){
             $this->setKey(new Key($this->getKeyId()));
         }
+        */
     }
 
     /**
