@@ -5,7 +5,7 @@
  *
  */
 
-function faxmaster_udpate(&$content, $currentVersion)
+function faxmaster_update(&$content, $currentVersion)
 {
     switch($currentVersion){
         case version_compare($currentVersion, '0.1.0', '<'):
@@ -14,7 +14,7 @@ function faxmaster_udpate(&$content, $currentVersion)
             if(PEAR::isError($result)){
                 return $result;
             }
-        case version_compare($currentVersion, '0.1.1', '<'):
+        case version_compare($currentVersion, '0.1.2', '<'):
             $db = new PHPWS_DB();
             $result = $db->importFile(PHPWS_SOURCE_DIR . 'mod/faxmaster/boost/update-0.1.2.sql');
             if(PEAR::isError($result)){
