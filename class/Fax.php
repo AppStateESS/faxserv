@@ -186,7 +186,7 @@ class Fax {
         $tpl['bannerId']        = is_null($this->getBannerId()) ? '' : $this->getBannerId();
         $tpl['name']            = $this->getName();
 
-        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold"; color: red;';
+        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold; color: red;"';
         //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
         
         $tpl['numPages']        = $this->getNumPages();
