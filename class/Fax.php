@@ -335,7 +335,7 @@ class Fax {
         $this->key = $key;
     }
 
-    private function setHidden($state) {
+    public function setHidden($state) {
         $this->hidden = $state;
     }
 
