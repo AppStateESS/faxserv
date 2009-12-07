@@ -24,7 +24,7 @@ class Fax {
 
     public $state           = NULL; // The state this fax is in. Values defined in inc/defines.php.
     public $printed         = NULL; // boolean, whether or not the fax has been printed.
-    public $hidden          = NULL; // boolean, if the fax should be displayed or not
+    public $hidden          = 0; // boolean, if the fax should be displayed or not
 
     public $keyId          = NULL; // The key_id of the Key object corresponding to this object. Used to create the Key object.
 

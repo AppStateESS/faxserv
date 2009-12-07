@@ -67,6 +67,7 @@ class Faxmaster {
 
         $fax = new Fax(0, $senderPhone, $fileName);
         $fax->setNumPages(Fax::countPages($fax));
+        $fax->setHidden(0);
         $result = $fax->save();
 
         # TODO pass the result back to the calling host, and have that host handle any errors
