@@ -66,6 +66,7 @@ class Fax {
 
         $this->setState(FAX_STATE_NEW);
         $this->setPrinted(false);
+        $this->setHidden(0);
 
         return;
     }
