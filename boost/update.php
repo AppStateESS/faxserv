@@ -20,6 +20,9 @@ function faxmaster_update(&$content, $currentVersion)
             if(PEAR::isError($result)){
                 return $result;
             }
+        case version_compare($currentVersion, '0.1.3', '<'):
+            PHPWS_Core::initModClass('users', 'Permission.php');
+            Users_Permission::registerPermissions('faxmaster', $content);
     }
 }
 

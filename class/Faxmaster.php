@@ -9,7 +9,15 @@
 class Faxmaster {
 
     public function __construct(){
-       $this->handleRequest(); 
+        try{
+            $this->handleRequest();
+        }catch(PermissionException $e){
+            PHPWS_Core::initModClass('faxmaster', 'FaxmasterNotificationView.php');
+            NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR, $e->getMessage());
+            $nv = new FaxmasterNotificationView();
+            $nv->popNotifications();
+            Layout::add($nv->show());
+        }
     }
 
     /**
@@ -94,6 +102,11 @@ class Faxmaster {
 
         $fax = new Fax($_REQUEST['id']);
 
+        if(!Current_User::allow('faxmaster', 'download')){
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+
         //TODO make sure that fax actually exists, show an error otherwise
 
         // Mark the fax as being read
@@ -109,6 +122,12 @@ class Faxmaster {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
 
+        if(!Current_User::allow('faxmaster', 'markPrinted')){
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+
+
         $fax = new Fax($_REQUEST['id']);
 
         $fax->markAsPrinted();
@@ -120,6 +139,12 @@ class Faxmaster {
     private function setNameId()
     {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+
+        if(!Current_User::allow('faxmaster', 'editSender')){
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+
 
         $fax = new Fax($_REQUEST['id']);
 
@@ -142,6 +167,11 @@ class Faxmaster {
     private function markFaxHidden() {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+
+        if(!Current_User::allow('faxmaster', 'markHidden')){
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
 
         $fax = new Fax($_REQUEST['id']);
 

@@ -2,3 +2,28 @@ table.faxmaster_faxPager {
 border-collapse : separate;
 border-spacing : 3px;
 }
+
+.fax-notification {
+    margin: 1em 0;
+    padding: 0.25em;
+}
+
+.error {
+    border: solid 1px #FF0000;
+    background: #FFCCCC;
+}
+
+.warning {
+    border: solid 1px #FFFF00;
+    background: #FFFFCC;
+}
+
+.success {
+    border: solid 1px #00FF00;
+    background: #CCFFCC;
+}
+
+.unknown {
+    border: solid 1px #0000FF;
+    background: #CCCCFF;
+}

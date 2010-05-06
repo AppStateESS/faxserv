@@ -6,6 +6,10 @@
 $use_permissions  = true;
 $item_permissions = true;
 
+$permissions['download']    = dgettext('faxmaster', 'Download/view faxes');
+$permissions['editSender']  = dgettext('faxmaster', 'Edit fax sender names');
+$permissions['markPrinted'] = dgettext('faxmaster', 'Mark faxes as printed');
+$permissions['hide']        = dgettext('faxmaster', 'Mark faxes as hidden');
 
 # Permissions for the general queue (i.e. new, un-assigned faxes)
 /*
