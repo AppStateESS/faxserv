@@ -168,7 +168,7 @@ class Faxmaster {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
 
-        if(!Current_User::allow('faxmaster', 'markHidden')){
+        if(!Current_User::allow('faxmaster', 'hide')){
             PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
             throw new PermissionException('Permission denied');
         }
