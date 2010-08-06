@@ -61,6 +61,30 @@ function handleDialogCancel()
     $("#dialog").dialog("close");
 }
 
+function markPrinted(id)
+{
+    $.get("index.php", {module: "faxmaster", op: "mark_fax_printed", id: id}, handlePrintedCallback);
+}
+
+function handlePrintedCallback(data)
+{
+    $("#"+ data + "_pagerRow").attr('style', '');
+}
+
+function markHidden(id)
+{
+    $.get("index.php", {module: "faxmaster", op: "mark_fax_hidden", id: id}, handleHiddenCallback);
+}
+
+function handleHiddenCallback(data)
+{
+    //$("#"+ data + "_pagerRow").hide(10000);
+    //$("#"+ data + "_pagerRow").animate({"height": 0, "opacity": "hide"}, "slow");
+    $("#"+ data + "_pagerRow").fadeOut();
+
+    
+}
+
 </script>
 
 <div align="right">
@@ -83,7 +107,7 @@ function handleDialogCancel()
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE} {printed}>
+    <tr {TOGGLE} {printed} id="{id}_pagerRow">
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>

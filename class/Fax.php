@@ -192,8 +192,11 @@ class Fax {
         $tpl['numPages']        = $this->getNumPages();
 
         $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
-        $actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
-        $actions[] = '[' . PHPWS_Text::secureLink('Hide', 'faxmaster', array('op'=>'mark_fax_hidden', 'id'=>$this->getId())) . ']';
+        $actions[] = "[<a href=\"javascript:markPrinted({$this->getId()})\">Mark as Printed</a>]";
+        $actions[] = "[<a href=\"javascript:markHidden({$this->getId()})\">Hide</a>]";
+
+        //$actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
+        //$actions[] = '[' . PHPWS_Text::secureLink('Hide', 'faxmaster', array('op'=>'mark_fax_hidden', 'id'=>$this->getId())) . ']';
 
         $tpl['actions']         = implode(' ', $actions);
 
@@ -342,6 +345,15 @@ class Fax {
     /******************
      * Static methods *
      ******************/
+
+    public static function getUnprintedCount()
+    {
+        $db = new PHPWS_DB('faxmaster_fax');
+        $db->addWhere('printed', 0);
+        $db->addWhere('hidden', 0);
+
+        return $db->count();
+    }
 
     public static function getFaxInfoByFileName($filename)
     {

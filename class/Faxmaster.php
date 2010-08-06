@@ -132,8 +132,8 @@ class Faxmaster {
 
         $fax->markAsPrinted();
 
-        $view = new FaxPager();
-        $view->show();
+        echo $fax->getId();
+        exit;
     }
 
     private function setNameId()
@@ -176,9 +176,9 @@ class Faxmaster {
         $fax = new Fax($_REQUEST['id']);
 
         $fax->markAsHidden();
-
-        $view = new FaxPager();
-        $view->show();
+        
+        echo $fax->getId();
+        exit;
     }
 }
 

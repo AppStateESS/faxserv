@@ -33,7 +33,13 @@ class FaxPager {
     public function show(){
         javascript('/jquery/');
         javascript('/jquery_ui/');
-        Layout::add($this->pager->get());
+
+        $tpl = array();
+
+        $tpl['PAGER'] = $this->pager->get();
+        $tpl['UNPRINTED_COUNT'] = Fax::getUnprintedCount();
+
+        Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'faxList.tpl'));
     }
 }
 
