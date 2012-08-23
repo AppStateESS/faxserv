@@ -1,5 +1,5 @@
 %define name faxmaster
-%define install_dir /var/www/html/hub/mod/faxmaster
+%define install_dir /var/www/phpwebsite/mod/faxmaster
 
 Summary:   FaxMaster
 Name:      %{name}
@@ -10,6 +10,7 @@ Group:     Development/PHP
 URL:       http://phpwebsite.appstate.edu
 Source:    %{name}-%{version}-%{release}.tar.bz2
 Requires:  php >= 5.0.0, php-gd >= 5.0.0, phpwebsite
+Prefix:    /var/www/phpwebsite
 BuildArch: noarch
 
 %description
