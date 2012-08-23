@@ -16,7 +16,7 @@ BuildArch: noarch
 Web Interface for Aggregating and Browsing Faxes
 
 %prep
-%setup -n faxmaster
+%setup
 
 %post
 /usr/bin/curl -L -k http://127.0.0.1/apc/clear
