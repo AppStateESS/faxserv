@@ -30,7 +30,7 @@ rm -f "$RPM_BUILD_ROOT%{install_dir}/.hgtags"
 rm -f "$RPM_BUILD_ROOT%{install_dir}/build.xml"
 rm -f "$RPM_BUILD_ROOT%{install_dir}/faxmaster.spec"
 rm -f "$RPM_BUILD_ROOT%{install_dir}/phpdox.xml"
-rm -f "$RPM_BUILD_ROOT%{install_dir}/cache.properties""
+rm -f "$RPM_BUILD_ROOT%{install_dir}/cache.properties"
 
 %clean
 rm -rf "$RPM_BUILD_ROOT%{install_dir}"
