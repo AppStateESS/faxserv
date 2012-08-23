@@ -1,5 +1,4 @@
 %define name faxmaster
-%define release 1
 %define install_dir /var/www/html/hub/mod/faxmaster
 
 Summary:   FaxMaster
@@ -9,7 +8,7 @@ Release:   %{release}
 License:   GPL
 Group:     Development/PHP
 URL:       http://phpwebsite.appstate.edu
-Source:    %{name}-%{version}.tar.bz2
+Source:    %{name}-%{version}-%{release}.tar.bz2
 Requires:  php >= 5.0.0, php-gd >= 5.0.0, phpwebsite
 BuildArch: noarch
 
@@ -20,14 +19,21 @@ Web Interface for Aggregating and Browsing Faxes
 %setup -n faxmaster
 
 %post
-/sbin/service httpd restart
+/usr/bin/curl -L -k http://127.0.0.1/apc/clear
 
 %install
 mkdir -p "$RPM_BUILD_ROOT%{install_dir}"
-cp -r * $RPM_BUILD_ROOT%{install_dir}
+cp -r * "$RPM_BUILD_ROOT%{install_dir}"
+rm -Rf "$RPM_BUILD_ROOT%{install_dir}/docs/"
+rm -Rf "$RPM_BUILD_ROOT%{install_dir}/.hg/"
+rm -f "$RPM_BUILD_ROOT%{install_dir}/.hgtags"
+rm -f "$RPM_BUILD_ROOT%{install_dir}/build.xml"
+rm -f "$RPM_BUILD_ROOT%{install_dir}/faxmaster.spec"
+rm -f "$RPM_BUILD_ROOT%{install_dir}/phpdox.xml"
+rm -f "$RPM_BUILD_ROOT%{install_dir}/cache.properties""
 
 %clean
-rm -rf "$RPM_BUILD_ROOT%install_dir"
+rm -rf "$RPM_BUILD_ROOT%{install_dir}"
 
 %files
 %defattr(-,apache,apache)
