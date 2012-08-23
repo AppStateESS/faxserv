@@ -25,6 +25,9 @@ Web Interface for Aggregating and Browsing Faxes
 %install
 mkdir -p "$RPM_BUILD_ROOT%{install_dir}"
 cp -r * "$RPM_BUILD_ROOT%{install_dir}"
+
+# Default Deletes for clean RPM
+
 rm -Rf "$RPM_BUILD_ROOT%{install_dir}/docs/"
 rm -Rf "$RPM_BUILD_ROOT%{install_dir}/.hg/"
 rm -f "$RPM_BUILD_ROOT%{install_dir}/.hgtags"
@@ -37,7 +40,7 @@ rm -f "$RPM_BUILD_ROOT%{install_dir}/cache.properties"
 rm -rf "$RPM_BUILD_ROOT%{install_dir}"
 
 %files
-%defattr(-,apache,apache)
+%defattr(-,root,root)
 %{install_dir}
 
 %changelog
