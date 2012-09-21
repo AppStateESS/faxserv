@@ -23,7 +23,13 @@ function faxmaster_update(&$content, $currentVersion)
         case version_compare($currentVersion, '0.1.3', '<'):
             PHPWS_Core::initModClass('users', 'Permission.php');
             Users_Permission::registerPermissions('faxmaster', $content);
+
+        case version_compare($currentVersion, '0.1.4', '<'):
+            PHPWS_Settings::set('faxmaster', 'fax_path', '/var/fax/');
+            PHPWS_Settings::save('faxmaster');
     }
+
+    return true;
 }
 
 ?>
