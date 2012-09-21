@@ -24,7 +24,7 @@ function faxmaster_update(&$content, $currentVersion)
             PHPWS_Core::initModClass('users', 'Permission.php');
             Users_Permission::registerPermissions('faxmaster', $content);
 
-        case version_compare($currentVersion, '0.1.4', '<'):
+        case version_compare($currentVersion, '0.1.5', '<'):
             PHPWS_Settings::set('faxmaster', 'fax_path', '/var/fax/');
             PHPWS_Settings::save('faxmaster');
     }
