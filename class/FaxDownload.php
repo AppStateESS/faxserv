@@ -15,8 +15,13 @@ class FaxDownload {
 
     public function show()
     {
+        $basePath = PHPWS_Settings::get('faxmaster', 'fax_path');
+        if(is_null($basePath) || !isset($basePath)){
+            throw new InvalidArgumentException('Please set fax_path setting.');
+        }
+
         header('Content-Disposition: attachment; filename="' . $this->fax->getFileName() . '"');
-        readfile(FAX_PATH . $this->fax->getFileName());
+        readfile($basePath . $this->fax->getFileName());
 
         exit;
     }

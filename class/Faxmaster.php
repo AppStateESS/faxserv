@@ -68,6 +68,11 @@ class Faxmaster {
         }
 
         # Make sure the file actually exists (i.e. it was copied to the FAX_PATH successfully)
+        $basePath = PHPWS_Settings::get('faxmaster', 'fax_path');
+        if(is_null($basePath) || !isset($basePath)){
+            throw new InvalidArgumentException('Please set fax_path setting.');
+        }
+
         if(!file_exists(FAX_PATH . $fileName)){
             # TODO, the file doesn't exist
             exit;

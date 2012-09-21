@@ -255,7 +255,12 @@ class Fax {
      * Returns the full path to the PDF file for this fax object
      */
     public function getFullPath(){
-        return FAX_PATH . $this->getFileName();
+        $basePath = PHPWS_Settings::get('faxmaster', 'fax_path');
+        if(is_null($basePath) || !isset($basePath)){
+            throw new InvalidArgumentException('Please set fax_path setting.');
+        }
+
+        return $basePath . $this->getFileName();
     }
 
     public function setFileName($name){
