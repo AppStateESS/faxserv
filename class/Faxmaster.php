@@ -45,6 +45,12 @@ class Faxmaster {
             case 'mark_fax_hidden':
                 $this->markFaxHidden();
                 break;
+            case 'show_stats':
+                $this->showStats();
+                break;
+            case 'csv':
+                $this->exportCSV();
+                break;
             default:
                 $this->showFaxes();
         }
@@ -184,6 +190,125 @@ class Faxmaster {
         
         echo $fax->getId();
         exit;
+    }
+
+    /**
+     * Queries the database for monthly statistics about all faxes received,
+     * then outputs those stats into a table. Lists the results in descending
+     * order by date so that the most recent month's stats are at the top.
+     */
+    private function showStats() {
+        $query = "  select MONTH(FROM_UNIXTIME(dateReceived)) as `Month`,
+                    YEAR(FROM_UNIXTIME(dateReceived)) as `Year`, 
+                    count(*) as `NumFaxes`,
+                    sum(numPages) as `PageCount`
+                    from faxmaster_fax 
+                    where hidden = 0 
+                    group by month, year asc 
+                    ORDER BY `Year` DESC, `Month` DESC;";
+
+        $db = new PHPWS_DB('faxmaster_fax');
+        $results = $db->select(null, $query);
+
+        $tpl = array();
+        if (count($results) == 0) {
+            $tpl['empty_table']['EMPTY_MESSAGE'] = "No faxes found.";
+        } else {
+            $tpl['COUNT'] = count($results);
+            $tpl['CSV_BUTTON'] = "<a href='index.php?module=faxmaster&op=csv'><button>Export as CSV</button></a>";
+            $toggle = 0;
+            foreach ($results as $row) {
+                $tpl['repeat_row'][] = array('month'=>$row['Month'],
+                                            'year'=>$row['Year'],
+                                            'numFaxes'=>$row['NumFaxes'],
+                                            'numPages'=>$row['PageCount'],
+                                            'TOGGLE'=>$toggle ? 'class="bgcolor1"' : 'class="bgcolor2"');
+                $toggle = !$toggle;
+            }
+        }
+        Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'statistics.tpl'));        
+    }
+
+    /**
+     * Queries the database for monthly statistics about all faxes received, 
+     * then outputs those stats as a CSV file. Lists the results in ascending
+     * order by date.
+     */
+    private function exportCSV() {
+        $csv;
+        $file = "FaxMasterExport" . date('m-d-Y') . ".csv";  // output filename
+
+        $db = new PHPWS_DB('faxmaster_fax');
+        $query = "  select MONTH(FROM_UNIXTIME(dateReceived)) as `Month`,
+                    YEAR(FROM_UNIXTIME(dateReceived)) as `Year`, 
+                    count(*) as `NumFaxes`,
+                    sum(numPages) as `PageCount`
+                    from faxmaster_fax 
+                    where hidden = 0 
+                    group by month, year asc 
+                    ORDER BY `Year` ASC, `Month` ASC;";
+        $results = $db->select(null, $query);
+
+        if (count($results) == 0) {
+            Layout::add("No records found in database");
+        } else {
+            $cols = array('Month', 'Year', 'Faxes', 'Pages');
+            $csv = $this->sputcsv($cols);
+
+            foreach ($results as $row) {
+                $reportRow = array($row['Month'], $row['Year'], $row['NumFaxes'], $row['PageCount']);
+                $csv .= $this->sputcsv($reportRow);
+            }
+ 
+            // Force the browser to open a 'save as' dialogue
+            header('Content-Type: text/csv');
+            header('Cache-Control: public, must-revalidate, max-age=0'); // HTTP/1.1
+            header('Pragma: public');
+            header('Expires: Mon, 17 Sep 2012 05:00:00 GMT'); // Date in the past
+            header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+            header('Content-Length: '.strlen($csv));
+            header('Content-Disposition: attachment; filename="' . $file . '";');
+
+            echo $csv;
+            exit();
+        }
+    }
+
+    /**
+     * Handles writing an array to a comma-separated string
+     * 
+     * @param Array $row Array of values to write
+     * @param char $delimiter
+     * @param char $enclosure
+     * @param char $eol
+     */
+    private static function sputcsv(Array $row, $delimiter = ',', $enclosure = '"', $eol = "\n")
+    {
+        static $fp = false;
+        if ($fp === false)
+        {
+            $fp = fopen('php://temp', 'r+'); // see http://php.net/manual/en/wrappers.php.php - yes there are 2 '.php's on the end.
+            // NB: anything you read/write to/from 'php://temp' is specific to this filehandle
+        }
+        else
+        {
+            rewind($fp);
+        }
+
+        if (fputcsv($fp, $row, $delimiter, $enclosure) === false)
+        {
+            return false;
+        }
+
+        rewind($fp);
+        $csv = fgets($fp);
+
+        if ($eol != PHP_EOL)
+        {
+            $csv = substr($csv, 0, (0 - strlen(PHP_EOL))) . $eol;
+        }
+
+        return $csv;
     }
 }
 
