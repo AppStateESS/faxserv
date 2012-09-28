@@ -27,9 +27,29 @@ function faxmaster_update(&$content, $currentVersion)
         case version_compare($currentVersion, '0.1.5', '<'):
             PHPWS_Settings::set('faxmaster', 'fax_path', '/var/fax/');
             PHPWS_Settings::save('faxmaster');
-    }
 
+        case version_compare($currentVersion, '0.1.6', '<'):
+            $content[] = '<pre>';
+            slcUpdateFiles(array(   'class/FaxPager.php',
+                                    'class/Faxmaster.php',
+                                    'templates/faxList.tpl',
+                                    'templates/style.css',
+                                    'templates/statistics.tpl'), $content);
+            $content[] = '0.1.6 Changes
+---------------
++ Added a statistics page to view monthly fax stats.
++ Added CSV export to the new statistics page.</pre>';
+    }
     return true;
+}
+
+function slcUpdateFiles($files, &$content) {
+    if (PHPWS_Boost::updateFiles($files, 'checkin')) {
+        $content[] = '--- Updated the following files:';
+    } else {
+        $content[] = '--- Unable to update the following files:';
+    }
+    $content[] = "    " . implode("\n    ", $files);
 }
 
 ?>

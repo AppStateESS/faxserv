@@ -34,9 +34,13 @@ class FaxPager {
         javascript('/jquery/');
         javascript('/jquery_ui/');
 
+        // Link to stats page
+        $button = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Monthly Stats</button></a>";
+
         $tpl = array();
 
         $tpl['PAGER'] = $this->pager->get();
+        $tpl['STATISTICS'] = $button;
         $tpl['UNPRINTED_COUNT'] = Fax::getUnprintedCount();
 
         Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'faxList.tpl'));

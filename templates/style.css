@@ -27,3 +27,39 @@ border-spacing : 3px;
     border: solid 1px #0000FF;
     background: #CCCCFF;
 }
+
+table.faxmaster_stats {
+    /*border-collapse : separate;*/
+    width : 286px;
+}
+table.faxmaster_stats th {
+    padding : 3px;
+    margin : 0px;
+}
+
+table.faxmaster_stats_inner {
+    border : black solid 1px;
+    /*width : 200px;*/
+    background-color : white;
+}
+
+table.faxmaster_stats_inner td {
+    border : black solid 1px;
+    border-collapse : collapse;
+    padding : 3px;
+}
+
+.col1in {width : 34px;}
+.col2in {width : 38px;}
+.col3in {width : 74px;}
+.col4in {width : 74px;}
+
+.col1out {width : 40px;}
+.col2out {width : 40px;}
+.col3out {width : 76px;}
+.col4out {}
+
+.innerBox {
+    height : 400px;
+    overflow : auto;
+}
