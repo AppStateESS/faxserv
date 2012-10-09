@@ -45,6 +45,9 @@ class Faxmaster {
             case 'mark_fax_hidden':
                 $this->markFaxHidden();
                 break;
+            case 'show_archive':
+                $this->showArchive();
+                break;
             case 'show_stats':
                 $this->showStats();
                 break;
@@ -101,6 +104,15 @@ class Faxmaster {
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
         $pager = new FaxPager();
         $pager->show();
+    }
+
+    /**
+     * A function that shows a db pager of all archived faxes
+     */
+    private function showArchive() {
+        PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+        $pager = new FaxPager('archived');
+        $pager->show(true);
     }
 
     /**

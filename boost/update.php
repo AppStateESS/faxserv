@@ -39,6 +39,30 @@ function faxmaster_update(&$content, $currentVersion)
 ---------------
 + Added a statistics page to view monthly fax stats.
 + Added CSV export to the new statistics page.</pre>';
+        
+        case version_compare($currentVersion, '0.1.7', '<'):
+            $content[] = '<pre>';
+
+            // Add 2 new columns to the database related to archiving
+            $db = new PHPWS_DB();
+            $result = $db->importFile(PHPWS_SOURCE_DIR . 'mod/faxmaster/boost/update-0.1.7.sql');
+            if (PEAR::isError($result)) {
+                return $result;
+            }
+            
+            slcUpdateFiles(array(   'boost/update.php',
+                                    'boost/update-0.1.7.sql',
+                                    'class/Fax.php',
+                                    'class/FaxPager.php',
+                                    'class/Faxmaster.php',
+                                    'templates/archivePager.tpl',
+                                    'templates/faxList.tpl'), $content);
+
+            $content[] = '0.1.7 Changes
+---------------
++ Added 2 database columns needed for archiving.
++ Added a "View Archive" button to view a list of archived faxes.
+</pre>';
     }
     return true;
 }
