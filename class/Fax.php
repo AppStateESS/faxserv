@@ -355,10 +355,14 @@ class Fax {
     }
 
     public function setArchived($state, $where=NULL) {
-        $this->archived = $state;
+        if ($state && !is_null($where)) {
+            $this->archived = 1;
+            $this->whichArchive = $where;
+        }
 
         if (!$state) {
-            $this->whichArchive = $where;
+            $this->archived = 0;
+            $this->whichArchive = NULL;
         }
     }
 

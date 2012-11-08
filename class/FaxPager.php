@@ -44,11 +44,10 @@ class FaxPager {
         javascript('/jquery/');
         javascript('/jquery_ui/');
 
-        // Link to stats page
-        $viewStats = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Monthly Stats</button></a>";
-
-        // Link to archive page
-        $viewArchive = "<a href='index.php?module=faxmaster&op=show_archive'><button>View Archive</button></a>";
+        // Link to stats, archive, and settings pages
+        $viewStats      = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Monthly Stats</button></a>";
+        $viewArchive    = "<a href='index.php?module=faxmaster&op=show_archive'><button>View Archive</button></a>";
+        $settings       = "<a href='index.php?module=faxmaster&op=settings'><button>Settings</button></a>";
 
         $tpl = array();
 
@@ -57,9 +56,17 @@ class FaxPager {
         // Don't show the topbar when viewing the archive list
         if (!$archive) {
             $topBar = array();
-            $topBar['STATISTICS'] = $viewStats;    // view stats button
-            $topBar['ARCHIVE'] = $viewArchive;     // view archive button
             $topBar['UNPRINTED_COUNT'] = Fax::getUnprintedCount();
+            $topBar['STATISTICS'] = $viewStats;     // view stats button
+            
+            // Only show 'View Archive' button if user has permission to view the archive
+            if (Current_User::allow('faxmaster', 'viewArchive'))
+                $topBar['ARCHIVE'] = $viewArchive;  // view archive button
+
+            // Only show 'Settings' button if user has proper permissions
+            if (Current_User::allow('faxmaster', 'settings'))
+                $topBar['SETTINGS'] = $settings;    // settings button
+            
             $tpl['topBar'][] = $topBar;
         }
 

@@ -50,18 +50,27 @@ function faxmaster_update(&$content, $currentVersion)
                 return $result;
             }
             
-            slcUpdateFiles(array(   'boost/update.php',
+            slcUpdateFiles(array(   'boost/boost.php',
+                                    'boost/install.sql',
+                                    'boost/permission.php',
+                                    'boost/update.php',
                                     'boost/update-0.1.7.sql',
+                                    'class/exception/InstallException.php'
                                     'class/Fax.php',
                                     'class/FaxPager.php',
                                     'class/Faxmaster.php',
+                                    'inc/settings.php',
                                     'templates/archivePager.tpl',
-                                    'templates/faxList.tpl'), $content);
+                                    'templates/faxList.tpl',
+                                    'templates/settings.tpl'), $content);
 
             $content[] = '0.1.7 Changes
 ---------------
++ Added an archive method that is only accessbile by URL.
++ Added permissions related to archiving and settings.
 + Added 2 database columns needed for archiving.
-+ Added a "View Archive" button to view a list of archived faxes.
++ Added a View Archive page to view a list of all archived faxes.
++ Added a Settings page to configure the fax and archive paths.
 </pre>';
     }
     return true;

@@ -11,6 +11,14 @@ $permissions['editSender']  = dgettext('faxmaster', 'Edit fax sender names');
 $permissions['markPrinted'] = dgettext('faxmaster', 'Mark faxes as printed');
 $permissions['hide']        = dgettext('faxmaster', 'Mark faxes as hidden');
 
+// Archiving Permissions
+$permissions['archive']         = dgettext('faxmaster', 'Archive faxes');
+$permissions['viewArchive']     = dgettext('faxmaster', 'View archive list');
+$permissions['downloadArchive'] = dgettext('faxmaster', 'Download archive');
+
+// Settings Permission
+$persmissions['settings']       = dgettext('faxmaster', 'Configure Settings');
+
 # Permissions for the general queue (i.e. new, un-assigned faxes)
 /*
 $permissions['unassigned_download'] = dgettext('faxmaster', 'View faxes in un-assigned fax queue');

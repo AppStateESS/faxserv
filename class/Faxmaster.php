@@ -17,13 +17,38 @@ class Faxmaster {
             $nv = new FaxmasterNotificationView();
             $nv->popNotifications();
             Layout::add($nv->show());
+        } catch (InstallException $e) { // catches path exceptions
+            PHPWS_Core::initModClass('faxmaster', 'FaxmasterNotificationView.php');
+            NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR, $e->getMessage());
+            
+            $settings = "<a href='index.php?module=faxmaster&op=settings'><button>Fix in Settings</button></a>";
+
+            if (!is_dir(PHPWS_Settings::get('faxmaster', 'fax_path'))) {
+                NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR, "The fax directory does not exist: <strong>" . PHPWS_Settings::get('faxmaster', 'fax_path') . "</strong> " . $settings);
+            }
+            
+            if (!is_dir(PHPWS_Settings::get('faxmaster', 'archive_path'))) {
+                NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR, "The archive directory does not exist: <strong>" . PHPWS_Settings::get('faxmaster', 'archive_path') . "</strong> " . $settings);
+            }
+            
+            $nv = new FaxmasterNotificationView();
+            $nv->popNotifications();
+            Layout::add($nv->show());
         }
     }
 
     /**
      * Controller - handles all requests and determines which control method to call
      */
-    private function handleRequest(){
+    private function handleRequest() {
+        // make sure the fax path and archive path exist
+        if (!is_dir(PHPWS_Settings::get('faxmaster', 'fax_path')) || !is_dir(PHPWS_Settings::get('faxmaster', 'archive_path'))) {
+            if (@$_REQUEST['op'] != 'settings') {
+                PHPWS_Core::initModClass('faxmaster', 'exception/InstallException.php');
+                throw new InstallException('1 or more directories do not exist!');
+            }
+        }
+        
         if(!isset($_REQUEST['op'])){
             $this->showFaxes();
             return;
@@ -54,6 +79,16 @@ class Faxmaster {
             case 'csv':
                 $this->exportCSV();
                 break;
+            case 'archive':
+                $this->archiveFaxes();
+                break;
+            case 'settings':
+                $this->changeSettings();
+                break;
+            case 'go_home': // 303 redirect to main module page
+                echo(header("HTTP/1.1 303 See Other"));
+                echo(header("Location: index.php?module=faxmaster"));
+                break;
             default:
                 $this->showFaxes();
         }
@@ -82,7 +117,7 @@ class Faxmaster {
             throw new InvalidArgumentException('Please set fax_path setting.');
         }
 
-        if(!file_exists(FAX_PATH . $fileName)){
+        if (!file_exists($basePath . $fileName)) {
             # TODO, the file doesn't exist
             exit;
         }
@@ -111,6 +146,12 @@ class Faxmaster {
      */
     private function showArchive() {
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
+
+        if (!Current_User::allow('faxmaster', 'viewArchive')) {
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+        
         $pager = new FaxPager('archived');
         $pager->show(true);
     }
@@ -202,6 +243,94 @@ class Faxmaster {
         
         echo $fax->getId();
         exit;
+    }
+
+    /**
+     * Allows users with sufficient privileges to change the settings associated
+     * with the faxmaster module.
+     */
+    private function changeSettings() {
+        // Check user's permissions
+        if (!Current_User::allow('faxmaster', 'settings')) {
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+        
+        $content = array();
+        $form = new PHPWS_Form('faxmaster_settings');
+        
+        // If $_REQUEST data has been given, set the paths
+        if (isset($_REQUEST['fax_path']) 
+            && !is_null($_REQUEST['fax_path']) 
+            && isset($_REQUEST['archive_path']) 
+            && !is_null($_REQUEST['archive_path']))
+        {
+            clearstatcache(true); // is_readable and is_writable cache results, so you need to clear the cache
+            $faxRead        = is_readable($_REQUEST['fax_path']);
+            $faxWrite       = is_writable($_REQUEST['fax_path']);
+            $archiveRead    = is_readable($_REQUEST['archive_path']);
+            $archiveWrite   = is_writable($_REQUEST['archive_path']);
+
+            if (!$faxRead || !$faxWrite || !$archiveRead || !$archiveWrite) {
+                // Show warnings for invalid paths
+                PHPWS_Core::initModClass('faxmaster', 'FaxmasterNotificationView.php');
+                if (!$faxRead) {
+                    NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR,
+                                "The fax directory you specified is not readable or does not exist.");
+                }
+                if (!$faxWrite) {
+                    NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR,
+                                "The fax directory you specified is not writable or does not exist.");
+                }
+                if (!$archiveRead) {
+                    NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR,
+                                "The archive directory you specified is not readable or does not exist.");
+                }
+                if (!$archiveWrite) {
+                    NQ::simple('faxmaster', FAX_NOTIFICATION_ERROR,
+                                "The archive directory you specified is not writable or does not exist.");
+                }
+                
+                $nv = new FaxmasterNotificationView();
+                $nv->popNotifications();
+                Layout::add($nv->show());
+                
+                // Show supplied paths
+                $form->setAction('index.php?module=faxmaster&op=settings');
+                $form->addTplTag('FAX_PATH', $_REQUEST['fax_path']);
+                $form->addTplTag('ARCHIVE_PATH', $_REQUEST['archive_path']);
+                $form->addSubmit('Try Again');
+                
+                $tpl = $form->getTemplate();
+                Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'settings.tpl')); 
+            } else {
+                // new paths were valid, so update settings
+                PHPWS_Settings::set('faxmaster', 'fax_path', $_REQUEST['fax_path']);
+                PHPWS_Settings::set('faxmaster', 'archive_path', $_REQUEST['archive_path']);
+                PHPWS_Settings::save('faxmaster');
+
+                // Show new paths
+                $form->setAction('index.php?module=faxmaster&op=go_home');
+                $form->addTplTag('SAVED', 'New Settings Saved!');
+                $form->addTplTag('FAX_PATH', PHPWS_Settings::get('faxmaster', 'fax_path'));
+                $form->addTplTag('ARCHIVE_PATH', PHPWS_Settings::get('faxmaster', 'archive_path'));
+                $form->addSubmit('Return to Fax List');
+                $tpl = $form->getTemplate();
+                Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'settings.tpl')); 
+            }
+        } else {
+            // Show initial form to change paths
+            $form->setAction('index.php?module=faxmaster&op=settings');
+            $form->addTplTag('WARNING','<strong>WARNING: </strong> Changing paths does not move files. Files must be moved manually.<br /><br \>');
+            $form->addText('fax_path', PHPWS_Settings::get('faxmaster', 'fax_path'));
+            $form->setSize('fax_path', 45);
+            $form->addText('archive_path', PHPWS_Settings::get('faxmaster', 'archive_path'));
+            $form->setSize('archive_path', 45);
+            $form->addSubmit('Save Settings');
+            $tpl = $form->getTemplate();
+            Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'settings.tpl')); 
+        }
+        
     }
 
     /**
@@ -321,6 +450,74 @@ class Faxmaster {
         }
 
         return $csv;
+    }
+   
+    /**
+     * Handles the archiving of faxes. Modifies the filesystem by creating new archive files,
+     * and remove existing fax files. Has many opportunities to throw exceptions.
+     * 
+     * Only accessible by URL of form:
+     * .../index.php?module=faxmaster&op=archive&start_date=(UNIX TIMESTAMP)[&end_date=(UNIX TIMESTAMP)]
+     */
+    private function archiveFaxes() {
+        PHPWS_Core::initModClass('faxmaster', 'Fax.php');
+    
+        // Get date range for archive. Use NOW for end date if one is not supplied.
+        $startDate  = $_REQUEST['start_date'];
+        $endDate    = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : time();
+
+        // Check user's permissions
+        if (!Current_User::allow('faxmaster', 'archive')) {
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+
+        // SELECT id FROM faxmaster_fax WHERE dateReceived >= start_date AND dateReceived < end_date AND archived=0;
+        $db = new PHPWS_DB('faxmaster_fax');
+        $db->addColumn('id');
+        $db->addWhere('archived', 0);                           // only grab unarchived files
+        $db->addWhere('dateReceived', $startDate, '>=', 'AND'); // startDate is inclusive
+        $db->addWhere('dateReceived', $endDate, '<', 'AND');    // endDate is exclusive
+        $results = $db->select();
+
+        // Make archive
+        $path = PHPWS_Settings::get('faxmaster', 'archive_path');
+        $archiveName = strftime('%m%d%Y', $startDate) . 'to' . strftime('%m%d%Y', $endDate) . '.tar';
+        try {
+            $archive = new PharData($path . $archiveName);
+        } catch (UnexpectedValueException $e) {
+            die('Could not open .tar file' . $e->getMessage());
+        } catch (BadMethodCallException $e) {
+            die('Bad method call' . $e->getMessage());
+        }
+    
+        // Fill the archive
+        foreach ($results as $result) {
+            $fax = new Fax($result['id']);
+            try {
+                $archive->addFile($fax->getFullPath(), $fax->getFileName());
+            } catch (PharException $e) {
+                die($e->getMessage());
+            }
+        }
+
+        // Compress the archive
+        try {
+            $archive = $archive->compress(Phar::GZ);
+        } catch (BadMethodCallException $e) {
+            die($e->getMessage());
+        }
+
+        // Remove .tar, leaving only the .tar.gz
+        unlink($path . $archiveName);
+
+        // Update each fax in the database, then remove it from the fax directory
+        foreach ($results as $result) {
+            $fax = new Fax($result['id']);
+            $fax->setArchived(1, $archiveName . '.gz');
+            $fax->save();
+            unlink($fax->getFullPath());
+        }
     }
 }
 
