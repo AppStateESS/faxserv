@@ -191,7 +191,11 @@ class Fax {
 
         if ($type === 'archived') {
             $tpl['fileName']    = $this->getFileName();
-            $tpl['archiveFile'] = $this->getArchiveFile();
+            if (Current_User::allow('faxmaster', 'downloadArchive')) {
+                $tpl['archiveFile'] = PHPWS_Text::secureLink($this->getArchiveFile(), 'faxmaster', array('op'=>'download_archive', 'fileName'=>$this->getArchiveFile()));
+            } else {
+                $tpl['archiveFile'] = $this->getArchiveFile();
+            }
         } else {
             $tpl['fileName']    = PHPWS_Text::secureLink($this->getFileName(), 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId()));
             $tpl['printed']     = $this->isPrinted() ? '' : 'style="font-weight: bold; color: red;"';

@@ -61,6 +61,9 @@ class Faxmaster {
             case 'download_fax':
                 $this->downloadFax();
                 break;
+            case 'download_archive':
+                $this->downloadArchive();
+                break;
             case 'mark_fax_printed':
                 $this->markFaxPrinted();
                 break;
@@ -178,6 +181,25 @@ class Faxmaster {
 
         // Create the necessary view, telling it which fax to show
         $view = new FaxDownload($fax);
+        $view->show();
+    }
+
+    /**
+     * Handles the request to download an archive file
+     */
+    private function downloadArchive() {
+        PHPWS_Core::initModClass('faxmaster', 'ArchiveDownload.php');
+
+        if (!Current_User::allow('faxmaster', 'downloadArchive')) {
+            PHPWS_Core::initModClass('faxmaster', 'exception/PermissionException.php');
+            throw new PermissionException('Permission denied');
+        }
+
+        if (!isset($_REQUEST['fileName'])) {
+            throw new InvalidArgumentException('fileName not set');
+        }
+
+        $view = new ArchiveDownload($_REQUEST['fileName']);
         $view->show();
     }
 

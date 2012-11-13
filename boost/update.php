@@ -55,6 +55,7 @@ function faxmaster_update(&$content, $currentVersion)
                                     'boost/permission.php',
                                     'boost/update.php',
                                     'boost/update-0.1.7.sql',
+                                    'class/ArchiveDownload.php',
                                     'class/exception/InstallException.php'
                                     'class/Fax.php',
                                     'class/FaxPager.php',
@@ -62,11 +63,13 @@ function faxmaster_update(&$content, $currentVersion)
                                     'inc/settings.php',
                                     'templates/archivePager.tpl',
                                     'templates/faxList.tpl',
-                                    'templates/settings.tpl'), $content);
+                                    'templates/settings.tpl',
+                                    'templates/style.css'), $content);
 
             $content[] = '0.1.7 Changes
 ---------------
 + Added an archive method that is only accessbile by URL.
++ Added the ability to Download an Archive file.
 + Added permissions related to archiving and settings.
 + Added 2 database columns needed for archiving.
 + Added a View Archive page to view a list of all archived faxes.

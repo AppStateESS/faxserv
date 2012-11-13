@@ -63,3 +63,10 @@ table.faxmaster_stats_inner td {
     height : 400px;
     overflow : auto;
 }
+
+/*
+ * Tame Firefox's extra button padding
+ */
+button::-moz-focus-inner {
+    padding : 0;
+}
