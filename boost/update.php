@@ -56,7 +56,7 @@ function faxmaster_update(&$content, $currentVersion)
                                     'boost/update.php',
                                     'boost/update-0.1.7.sql',
                                     'class/ArchiveDownload.php',
-                                    'class/exception/InstallException.php'
+                                    'class/exception/InstallException.php',
                                     'class/Fax.php',
                                     'class/FaxPager.php',
                                     'class/Faxmaster.php',
