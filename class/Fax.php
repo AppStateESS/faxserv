@@ -24,7 +24,9 @@ class Fax {
 
     public $state           = NULL; // The state this fax is in. Values defined in inc/defines.php.
     public $printed         = NULL; // boolean, whether or not the fax has been printed.
-    public $hidden          = 0; // boolean, if the fax should be displayed or not
+    public $hidden          = 0;    // boolean, if the fax should be displayed or not.
+    public $archived        = 0;    // boolean, whether or not the fax has been archived.
+    public $whichArchive    = NULL; // The filename of the archive file containing this fax.
 
     public $keyId          = NULL; // The key_id of the Key object corresponding to this object. Used to create the Key object.
 
@@ -66,7 +68,8 @@ class Fax {
 
         $this->setState(FAX_STATE_NEW);
         $this->setPrinted(false);
-        $this->setHidden(0);
+        $this->setHidden(0);    // default, not hidden
+        $this->setArchived(0);  // default, not archived
 
         return;
     }
@@ -176,29 +179,37 @@ class Fax {
     /**
      * Returns the DBPager row tags for this fax
      */
-    public function pagerRowTags(){
+    public function pagerRowTags($type='default'){
         $tpl = array();
 
         $tpl['id'] = $this->getID();
         $tpl['senderPhone']     = $this->getSenderPhoneFormatted();
-        $tpl['fileName']        = PHPWS_Text::secureLink($this->getFileName(), 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId()));
         $tpl['dateReceived']    = $this->getDateReceivedFormatted();
         $tpl['bannerId']        = is_null($this->getBannerId()) ? '' : $this->getBannerId();
         $tpl['name']            = $this->getName();
-
-        $tpl['printed']         = $this->isPrinted() ? '' : 'style="font-weight: bold; color: red;"';
-        //$tpl['new']             = $this->isNew() ? 'style="font-weight: bold"' : '';
-        
         $tpl['numPages']        = $this->getNumPages();
 
-        $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
-        $actions[] = "[<a href=\"javascript:markPrinted({$this->getId()})\">Mark as Printed</a>]";
-        $actions[] = "[<a href=\"javascript:markHidden({$this->getId()})\">Hide</a>]";
+        if ($type === 'archived') {
+            $tpl['fileName']    = $this->getFileName();
+            if (Current_User::allow('faxmaster', 'downloadArchive')) {
+                $tpl['archiveFile'] = PHPWS_Text::secureLink($this->getArchiveFile(), 'faxmaster', array('op'=>'download_archive', 'fileName'=>$this->getArchiveFile()));
+            } else {
+                $tpl['archiveFile'] = $this->getArchiveFile();
+            }
+        } else {
+            $tpl['fileName']    = PHPWS_Text::secureLink($this->getFileName(), 'faxmaster', array('op'=>'download_fax', 'id'=>$this->getId()));
+            $tpl['printed']     = $this->isPrinted() ? '' : 'style="font-weight: bold; color: red;"';
+            //$tpl['new']         = $this->isNew() ? 'style="font-weight: bold"' : '';
+        
+            $actions[] = "[<a href=\"javascript:showNameDialog({$this->getId()})\">Edit</a>]";
+            $actions[] = "[<a href=\"javascript:markPrinted({$this->getId()})\">Mark as Printed</a>]";
+            $actions[] = "[<a href=\"javascript:markHidden({$this->getId()})\">Hide</a>]";
 
-        //$actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
-        //$actions[] = '[' . PHPWS_Text::secureLink('Hide', 'faxmaster', array('op'=>'mark_fax_hidden', 'id'=>$this->getId())) . ']';
+            //$actions[] = '[' . PHPWS_Text::secureLink('Mark as Printed', 'faxmaster', array('op'=>'mark_fax_printed', 'id'=>$this->getId())) . ']';
+            //$actions[] = '[' . PHPWS_Text::secureLink('Hide', 'faxmaster', array('op'=>'mark_fax_hidden', 'id'=>$this->getId())) . ']';
 
-        $tpl['actions']         = implode(' ', $actions);
+            $tpl['actions']         = implode(' ', $actions);
+        }
 
         return $tpl;
     }
@@ -347,6 +358,22 @@ class Fax {
         $this->hidden = $state;
     }
 
+    public function setArchived($state, $where=NULL) {
+        if ($state && !is_null($where)) {
+            $this->archived = 1;
+            $this->whichArchive = $where;
+        }
+
+        if (!$state) {
+            $this->archived = 0;
+            $this->whichArchive = NULL;
+        }
+    }
+
+    public function getArchiveFile() {
+        return $this->whichArchive;
+    }
+
     /******************
      * Static methods *
      ******************/
@@ -356,6 +383,7 @@ class Fax {
         $db = new PHPWS_DB('faxmaster_fax');
         $db->addWhere('printed', 0);
         $db->addWhere('hidden', 0);
+        $db->addWhere('archived', 0);   // don't include archived faxes, even if they aren't printed
 
         return $db->count();
     }

@@ -4,7 +4,7 @@
 */
 
 $proper_name  = 'Fax Master';
-$version      = '0.1.6';
+$version      = '0.1.7';
 $register     = true;
 $unregister   = true;
 $import_sql   = true;

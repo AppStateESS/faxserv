@@ -12,5 +12,7 @@ CREATE TABLE faxmaster_fax (
     state INTEGER NOT NULL,
     printed INTEGER NOT NULL,
     hidden INTEGER NOT NULL default 0,
+    archived INTEGER NOT NULL default 0,
+    whichArchive VARCHAR( 255 ),
     PRIMARY KEY (id)
 );

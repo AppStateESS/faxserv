@@ -31,6 +31,6 @@ $settings['max_height']         = 300;
 */
 
 # The directory where the faxes are stored, with trailing slash
-$settings['fax_path']           = '/var/fax/';
-
+$settings['fax_path']       = '/var/fax/';
+$settings['archive_path']   = $settings['fax_path'] . 'archives/';
 ?>
