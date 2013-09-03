@@ -88,6 +88,9 @@ class Faxmaster {
             case 'settings':
                 $this->changeSettings();
                 break;
+	    case 'showActionLog':
+	        $this->showActionLog();
+	        break;
             case 'go_home': // 303 redirect to main module page
                 echo(header("HTTP/1.1 303 See Other"));
                 echo(header("Location: index.php?module=faxmaster"));
@@ -160,6 +163,16 @@ class Faxmaster {
     }
 
     /**
+      * shows a log of all actions taken and by what user
+      */
+    private function showActionLog()
+    {
+        PHPWS_Core::initModClass('faxmaster', 'ActionLogPager.php');
+	$pager = new ActionLogPager();
+	$pager->show(true);
+    }
+    
+    /**
      * Handles the request to download a particlar fax
      */
     private function downloadFax()
@@ -215,7 +228,6 @@ class Faxmaster {
 
 
         $fax = new Fax($_REQUEST['id']);
-
         $fax->markAsPrinted();
 
         echo $fax->getId();

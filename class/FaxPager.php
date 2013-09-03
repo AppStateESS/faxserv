@@ -48,8 +48,10 @@ class FaxPager {
         $viewStats      = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Statistics</button></a>";
         $viewArchive    = "<a href='index.php?module=faxmaster&op=show_archive'><button>View Archive</button></a>";
         $settings       = "<a href='index.php?module=faxmaster&op=settings'><button>Settings</button></a>";
+        $actionLog       = "<a href='index.php?module=faxmaster&op=showActionLog'><button>Action Log</button></a>";
 
         $tpl = array();
+
 
         $tpl['PAGER'] = $this->pager->get();
 
@@ -66,6 +68,8 @@ class FaxPager {
             // Only show 'Settings' button if user has proper permissions
             if (Current_User::allow('faxmaster', 'settings'))
                 $topBar['SETTINGS'] = $settings;    // settings button
+
+	    $topBar['ACTIONLOG'] = $actionLog;
             
             $tpl['topBar'][] = $topBar;
         }

@@ -158,6 +158,15 @@ class Fax {
     }
 
     public function markAsPrinted(){
+      //get username, timestamp, activity, and fax id
+      $name = Current_User::getUsername();
+      $timestamp = mktime();
+      $activity = "markAsPrinted";
+      $faxId = $this->getId();
+
+      //make a function that does this
+      //actionLog($name,$timestamp,$activity,$faxId); 
+
         $this->setPrinted(true);
         $this->save();
     }
