@@ -6,10 +6,10 @@ define('ACTION_LOG_TABLE', 'faxmaster_action_log');
 class ActionLog
 {
     public $id;
-    public $FaxID;
+    public $faxID;
     public $username;
-    public $action;
-    public $timestamp;
+    public $activity;
+    public $timePerformed;
 
     public function getDb()
     {
@@ -17,19 +17,21 @@ class ActionLog
     }
 
 
-    public function __construct($id = 0)
+    public function __construct($id = 0, $faxID = NULL, $username = NULL, $action = NULL, $timestamp = NULL)
     {
-        if(!is_null($id) && is_numeric($id)){
-            $this->id = $id;
-            
-            $result = $this->load();
-
-            if(!$result){
-                $this->id = 0;
-            }
-        } else {
-            $this->id = 0;
-        }
+      //if id is not zero, we need to load a premade obj
+      if($id != 0){
+	$this->id = (int)$id;
+	$this->load();
+	return;
+      }
+      else{
+	$this->faxID = $faxID;
+	$this->username = $username;
+	$this->activity = $action;
+	$this->timePerformed = $timestamp;
+	$this->save();
+      }
     }
     
     public function getId(){
@@ -76,8 +78,8 @@ class ActionLog
       //this is from noomination, change it to reflect our action log
       $tpl['ID'] = $this->faxID;
       $tpl['USERNAME'] = $this->username;
-      $tpl['ACTION'] = $this->action;
-      $tpl['TIMESTAMP'] = $this->timestamp;
+      $tpl['ACTIVITY'] = $this->activity;
+      $tpl['TIMEPERFORMED'] = $this->timePerformed;
       return $tpl;
     }
 
@@ -92,13 +94,13 @@ class ActionLog
     {
         return $this->username;
     }
-    public function getAction()
+    public function getActivity()
     {
-        return $this->action;
+        return $this->activity;
     }
-    public function getTimestamp()
+    public function getTimePerformed()
     {
-        return $this->timestamp;
+        return $this->timePerformed;
     }
 }
 ?>

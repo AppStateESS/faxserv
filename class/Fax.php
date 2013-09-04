@@ -163,7 +163,8 @@ class Fax {
       $timestamp = mktime();
       $activity = "markAsPrinted";
       $faxId = $this->getId();
-
+      PHPWS_Core::initModClass('faxmaster','ActionLog.php');
+      $action = new ActionLog(0,$faxID,$username,$activity,$timestamp);
       //make a function that does this
       //actionLog($name,$timestamp,$activity,$faxId); 
 

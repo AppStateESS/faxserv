@@ -216,6 +216,8 @@ class Faxmaster {
         $view->show();
     }
 
+
+    //add to action log
     private function markFaxPrinted()
     {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
@@ -234,6 +236,7 @@ class Faxmaster {
         exit;
     }
 
+    //add to action log
     private function setNameId()
     {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
@@ -262,6 +265,8 @@ class Faxmaster {
         exit;
     }
 
+
+    //add to action log
     private function markFaxHidden() {
         PHPWS_Core::initModClass('faxmaster', 'Fax.php');
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
