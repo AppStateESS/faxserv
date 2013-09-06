@@ -6,7 +6,7 @@ define('ACTION_LOG_TABLE', 'faxmaster_action_log');
 class ActionLog
 {
     public $id;
-    public $faxID;
+    public $faxName;
     public $username;
     public $activity;
     public $timePerformed;
@@ -17,16 +17,15 @@ class ActionLog
     }
 
 
-    public function __construct($id = 0, $faxID = NULL, $username = NULL, $action = NULL, $timestamp = NULL)
+    public function __construct($id = 0, $faxName = NULL, $username = NULL, $action = NULL, $timestamp = NULL)
     {
       //if id is not zero, we need to load a premade obj
       if($id != 0){
 	$this->id = (int)$id;
 	$this->load();
-	return;
       }
       else{
-	$this->faxID = $faxID;
+	$this->faxName = $faxName;
 	$this->username = $username;
 	$this->activity = $action;
 	$this->timePerformed = $timestamp;
@@ -72,23 +71,21 @@ class ActionLog
     // For ActionLogView
     public function rowTags()
     {
-
       $tpl      = array();
 
-      //this is from noomination, change it to reflect our action log
-      $tpl['ID'] = $this->faxID;
+      $tpl['FAXNAME'] = $this->faxName;
       $tpl['USERNAME'] = $this->username;
       $tpl['ACTIVITY'] = $this->activity;
-      $tpl['TIMEPERFORMED'] = $this->timePerformed;
+      $tpl['TIMEPERFORMED'] = date('Y-m-d h:i:s',$this->timePerformed);
       return $tpl;
     }
 
     /**
      * Getters...
      */
-    public function getFaxID()
+    public function getFaxName()
     {
-        return $this->faxID;
+        return $this->faxName;
     }
     public function getUsername()
     {
@@ -102,5 +99,12 @@ class ActionLog
     {
         return $this->timePerformed;
     }
+}
+
+class RestoredActionLog extends ActionLog
+{
+  public function __construct()
+  {
+  }
 }
 ?>

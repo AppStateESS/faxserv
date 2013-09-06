@@ -11,7 +11,7 @@ class ActionLogPager {
         PHPWS_Core::initCoreClass('DBPager.php');
         PHPWS_Core::initModClass('faxmaster', 'ActionLog.php');
 
-        $this->pager = new DBPager('faxmaster_action_log', 'ActionLog');
+        $this->pager = new DBPager('faxmaster_action_log', 'RestoredActionLog');
         $this->pager->setModule('faxmaster');
         $this->pager->setLink('index.php?module=faxmaster');
 
@@ -20,11 +20,11 @@ class ActionLogPager {
         $this->pager->addToggle('class="bgcolor2"');
 
         // By default, sort the faxes in reverse chronological order
-        $this->pager->setOrder('timestamp', 'DESC', true);
+        $this->pager->setOrder('timePerformed', 'DESC', true);
 
-	$this->pager->setTemplate('faxPager.tpl');
+	$this->pager->setTemplate('actionLogList.tpl');
 	$this->pager->setEmptyMessage('No actions found.');
-	$this->pager->addRowTags('pagerRowTags');
+	$this->pager->addRowTags('rowTags');
 	$this->pager->setSearch('username');
     }
 
@@ -58,7 +58,7 @@ class ActionLogPager {
 	
 	$tpl['topBar'][] = $topBar;
 	
-        Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'actionLogList.tpl'));
+        Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'actionLogPage.tpl'));
     }
 }
 
