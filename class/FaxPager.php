@@ -45,10 +45,10 @@ class FaxPager {
         javascript('/jquery_ui/');
 
         // Link to stats, archive, and settings pages
-        $viewStats      = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Statistics</button></a>";
-        $viewArchive    = "<a href='index.php?module=faxmaster&op=show_archive'><button>View Archive</button></a>";
-        $settings       = "<a href='index.php?module=faxmaster&op=settings'><button>Settings</button></a>";
-        $actionLog       = "<a href='index.php?module=faxmaster&op=showActionLog'><button>Action Log</button></a>";
+        $viewStats      = '<a class="btn btn-default" href="index.php?module=faxmaster&op=show_stats">View Statistics</a>';
+        $viewArchive    = '<a class="btn btn-default" href="index.php?module=faxmaster&op=show_archive">View Archive</a>';
+        $settings       = '<a class="btn btn-default" href="index.php?module=faxmaster&op=settings">Settings</a>';
+        $actionLog      = '<a class="btn btn-default" href="index.php?module=faxmaster&op=showActionLog">Action Log</a>';
 
         $tpl = array();
 
