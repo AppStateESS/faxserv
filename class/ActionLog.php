@@ -19,18 +19,17 @@ class ActionLog
 
     public function __construct($id = 0, $faxName = NULL, $username = NULL, $action = NULL, $timestamp = NULL)
     {
-      //if id is not zero, we need to load a premade obj
-      if($id != 0){
-	$this->id = (int)$id;
-	$this->load();
-      }
-      else{
-	$this->faxName = $faxName;
-	$this->username = $username;
-	$this->activity = $action;
-	$this->timePerformed = $timestamp;
-	$this->save();
-      }
+        //if id is not zero, we need to load a premade obj
+        if($id != 0){
+            $this->id = (int)$id;
+            $this->load();
+        } else {
+            $this->faxName = $faxName;
+            $this->username = $username;
+            $this->activity = $action;
+            $this->timePerformed = $timestamp;
+            $this->save();
+        }
     }
     
     public function getId(){
