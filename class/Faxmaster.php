@@ -265,7 +265,7 @@ class Faxmaster {
 
 	//get username, timestamp, activity, and fax id
 	$name = Current_User::getUsername();
-	$timestamp = mktime();
+	$timestamp = time();
 	$activity = "changed name or banner id";
 	$faxName = $fax->getFileName();
 	PHPWS_Core::initModClass('faxmaster','ActionLog.php');
