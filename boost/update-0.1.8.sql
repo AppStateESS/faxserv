@@ -6,7 +6,7 @@ CREATE TABLE faxmaster_action_log (
     activity VARCHAR( 32 ) NOT NULL,
     timePerformed INTEGER NOT NULL,
     faxName VARCHAR( 50 ),
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );
 
 COMMIT;
