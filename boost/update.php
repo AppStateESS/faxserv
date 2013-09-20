@@ -75,6 +75,15 @@ function faxmaster_update(&$content, $currentVersion)
 + Added a View Archive page to view a list of all archived faxes.
 + Added a Settings page to configure the fax and archive paths.
 </pre>';
+
+        case version_compare($currentVersion, '0.1.8', '<'):
+
+            $db = new PHPWS_DB();
+            $result = $db->importFile(PHPWS_SOURCE_DIR . 'mod/faxmaster/boost/update-0.1.8.sql');
+            if (PEAR::isError($result)) {
+                return $result;
+            }
+
     }
     return true;
 }
