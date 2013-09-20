@@ -14,28 +14,29 @@ function showNameDialog(id)
 {
     elementId = id;
 
-    $("#id").attr('value', id);
+    $("#id").prop('value', id);
     $("#dialog").dialog("open");
 
     var name = $("#" + elementId + "_name").html().split(' ');
 
-    $("#firstname").attr('value', name[0]);
-    $("#lastname").attr('value', name[1]);
-    $("#bannerid").attr('value', $("#" + elementId + "_bannerid").html());
+    $("#firstname").prop('value', name[0]);
+    $("#lastname").prop('value', name[1]);
+    $("#bannerid").prop('value', $("#" + elementId + "_bannerid").html());
 }
 
 function handleDialogOk()
 {
-    element_id  = $("#id").attr('value');
-    first       = $("#firstname").attr('value');
-    last        = $("#lastname").attr('value');
-    banner      = $("#bannerid").attr('value');
+    element_id  = $("#id").prop('value');
+    first       = $("#firstname").prop('value');
+    last        = $("#lastname").prop('value');
+    banner      = $("#bannerid").prop('value');
 
-    $.get("index.php", {module: "faxmaster", op: "set_name_id", id: elementId, firstName: first, lastName: last, bannerId: banner}, handleCallback);
+    $.get("index.php", {module: 'faxmaster', op: 'set_name_id', id: elementId, firstName: first, lastName: last, bannerId: banner}, handleCallback, 'html');
 }
 
-function handleCallback(data)
+function handleCallback(data, textStatus, jqXHR)
 {
+    console.log('in callback');
     if(data == "1"){
         $("#dialog").dialog('close');
         $("#" + elementId + "_bannerid").html(banner);
@@ -49,10 +50,10 @@ function handleCallback(data)
     last        = null;
     banner      = null;
 
-    element_id  = $("#id").attr('value', "");
-    first       = $("#firstname").attr('value', "");
-    last        = $("#lastname").attr('value', "");
-    banner      = $("#bannerid").attr('value', "");
+    element_id  = $("#id").prop('value', "");
+    first       = $("#firstname").prop('value', "");
+    last        = $("#lastname").prop('value', "");
+    banner      = $("#bannerid").prop('value', "");
 
 }
 
@@ -68,7 +69,7 @@ function markPrinted(id)
 
 function handlePrintedCallback(data)
 {
-    $("#"+ data + "_pagerRow").attr('style', '');
+    $("#"+ data + "_pagerRow").prop('style', '');
 }
 
 function markHidden(id)

@@ -263,13 +263,13 @@ class Faxmaster {
 
         echo $fax->save();
 
-	//get username, timestamp, activity, and fax id
-	$name = Current_User::getUsername();
-	$timestamp = time();
-	$activity = "changed name or banner id";
-	$faxName = $fax->getFileName();
-	PHPWS_Core::initModClass('faxmaster','ActionLog.php');
-	$action = new ActionLog(0,$faxName,$name,$activity,$timestamp);
+        //get username, timestamp, activity, and fax id
+        $name = Current_User::getUsername();
+        $timestamp = time();
+        $activity = "changed name or banner id";
+        $faxName = $fax->getFileName();
+        PHPWS_Core::initModClass('faxmaster','ActionLog.php');
+        $action = new ActionLog(0,$faxName,$name,$activity,$timestamp);
 
         exit;
     }
