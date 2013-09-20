@@ -43,9 +43,9 @@ class Faxmaster {
     private function handleRequest() {
         // make sure the fax path and archive path exist
         if (!is_dir(PHPWS_Settings::get('faxmaster', 'fax_path')) || !is_dir(PHPWS_Settings::get('faxmaster', 'archive_path'))) {
-            if (@$_REQUEST['op'] != 'settings') {
+            if (isset($_REQUEST['op']) && $_REQUEST['op'] != 'settings') {
                 PHPWS_Core::initModClass('faxmaster', 'exception/InstallException.php');
-                throw new InstallException('1 or more directories do not exist!');
+                throw new InstallException('fax_path and/or archive_path directories do not exist!');
             }
         }
         

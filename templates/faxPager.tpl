@@ -87,11 +87,11 @@ function handleHiddenCallback(data)
 
 </script>
 
-<div align="right">
+<div class="pull-right">
     {SEARCH}
 </div>
 
-<table class="faxmaster_faxPager" cellpadding="2">
+<table class="table table-stripped">
     <tr>
         <th>File Name</th>
         <th>Sender Phone</th>
@@ -107,7 +107,7 @@ function handleHiddenCallback(data)
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE} {printed} id="{id}_pagerRow">
+    <tr {printed} id="{id}_pagerRow">
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>
