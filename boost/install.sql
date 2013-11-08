@@ -1,6 +1,6 @@
 -- @author Jeremy Booker <jbooker at tux dot appstate dot edu>
 
-CREATE TABLE faxmaster_fax (
+CREATE TABLE IF NOT EXISTS faxmaster_fax (
     id INT NOT NULL,
     senderPhone VARCHAR( 15 ) NOT NULL,
     fileName VARCHAR( 32 ) NOT NULL,
@@ -17,11 +17,11 @@ CREATE TABLE faxmaster_fax (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE faxmaster_action_log (
+CREATE TABLE IF NOT EXISTS faxmaster_action_log (
     id INT NOT NULL,
     username VARCHAR( 32 ) NOT NULL,
     activity VARCHAR( 32 ) NOT NULL,
     timePerformed INTEGER NOT NULL,
     faxName VARCHAR( 50 ),
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );
