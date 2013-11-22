@@ -32,34 +32,10 @@ class ActionLogPager {
         javascript('/jquery/');
         javascript('/jquery_ui/');
 
-        // Link to stats, archive, and settings pages
-        $viewStats      = "<a href='index.php?module=faxmaster&op=show_stats'><button>View Statistics</button></a>";
-        $viewArchive    = "<a href='index.php?module=faxmaster&op=show_archive'><button>View Archive</button></a>";
-        $settings       = "<a href='index.php?module=faxmaster&op=settings'><button>Settings</button></a>";
-	$actionLog       = "<a href='index.php?module=faxmaster&op=showActionLog'><button>Action Log</button></a>";
-
         $tpl = array();
-
         $tpl['PAGER'] = $this->pager->get();
 
-        // Don't show the topbar when viewing the archive list
-	$topBar = array();
-	$topBar['STATISTICS'] = $viewStats;     // view stats button
-	
-	// Only show 'View Archive' button if user has permission to view the archive
-	if (Current_User::allow('faxmaster', 'viewArchive'))
-	  $topBar['ARCHIVE'] = $viewArchive;  // view archive button
-	
-	// Only show 'Settings' button if user has proper permissions
-	if (Current_User::allow('faxmaster', 'settings'))
-	  $topBar['SETTINGS'] = $settings;    // settings button
-
-	$topBar['ACTIONLOG'] = $actionLog;
-	
-	$tpl['topBar'][] = $topBar;
-	
         Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'actionLogPage.tpl'));
     }
 }
-
 ?>

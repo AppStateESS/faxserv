@@ -44,33 +44,13 @@ class FaxPager {
         javascript('/jquery/');
         javascript('/jquery_ui/');
 
-        // Link to stats, archive, and settings pages
-        $viewStats      = '<a class="btn btn-default" href="index.php?module=faxmaster&op=show_stats">View Statistics</a>';
-        $viewArchive    = '<a class="btn btn-default" href="index.php?module=faxmaster&op=show_archive">View Archive</a>';
-        $settings       = '<a class="btn btn-default" href="index.php?module=faxmaster&op=settings">Settings</a>';
-        $actionLog      = '<a class="btn btn-default" href="index.php?module=faxmaster&op=showActionLog">Action Log</a>';
-
         $tpl = array();
-
-
         $tpl['PAGER'] = $this->pager->get();
 
         // Don't show the topbar when viewing the archive list
         if (!$archive) {
             $topBar = array();
             $topBar['UNPRINTED_COUNT'] = Fax::getUnprintedCount();
-            $topBar['STATISTICS'] = $viewStats;     // view stats button
-            
-            // Only show 'View Archive' button if user has permission to view the archive
-            if (Current_User::allow('faxmaster', 'viewArchive'))
-                $topBar['ARCHIVE'] = $viewArchive;  // view archive button
-
-            // Only show 'Settings' button if user has proper permissions
-            if (Current_User::allow('faxmaster', 'settings'))
-                $topBar['SETTINGS'] = $settings;    // settings button
-
-	    $topBar['ACTIONLOG'] = $actionLog;
-            
             $tpl['topBar'][] = $topBar;
         }
 

@@ -88,9 +88,9 @@ class Faxmaster {
             case 'settings':
                 $this->changeSettings();
                 break;
-	    case 'showActionLog':
-	        $this->showActionLog();
-	        break;
+	        case 'showActionLog':
+	            $this->showActionLog();
+	            break;
             case 'go_home': // 303 redirect to main module page
                 echo(header("HTTP/1.1 303 See Other"));
                 echo(header("Location: index.php?module=faxmaster"));
@@ -145,6 +145,7 @@ class Faxmaster {
         PHPWS_Core::initModClass('faxmaster', 'FaxPager.php');
         $pager = new FaxPager();
         $pager->show();
+        $this->addNavLinks();
     }
 
     /**
@@ -160,6 +161,7 @@ class Faxmaster {
         
         $pager = new FaxPager('archived');
         $pager->show(true);
+        $this->addNavLinks();
     }
 
     /**
@@ -168,8 +170,9 @@ class Faxmaster {
     private function showActionLog()
     {
         PHPWS_Core::initModClass('faxmaster', 'ActionLogPager.php');
-	$pager = new ActionLogPager();
-	$pager->show(true);
+	    $pager = new ActionLogPager();
+	    $pager->show(true);
+        $this->addNavLinks();
     }
     
     /**
@@ -378,7 +381,7 @@ class Faxmaster {
             $tpl = $form->getTemplate();
             Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'settings.tpl')); 
         }
-        
+        $this->addNavLinks();        
     }
 
     /**
@@ -416,6 +419,7 @@ class Faxmaster {
             }
         }
         Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'statistics.tpl'));        
+        $this->addNavLinks();
     }
 
     /**
@@ -567,6 +571,36 @@ class Faxmaster {
             unlink($fax->getFullPath());
         }
     }
-}
 
+
+    /**
+     * This function adds links to the navigation bar at the top of the page.
+     * This function assumes that there is a NAV_LINKS tag in the main theme template.
+     */
+    private function addNavLinks() { 
+        // Link to the pages. One nav button for each link.
+        $viewStats      = array("LINK"=>"index.php?module=faxmaster&op=show_stats", "TEXT"=>"View Statistics");
+        $viewArchive    = array("LINK"=>"index.php?module=faxmaster&op=show_archive", "TEXT"=>"View Archive");
+        $settings       = array("LINK"=>"index.php?module=faxmaster&op=settings", "TEXT"=>"Settings");
+        $actionLog      = array("LINK"=>"index.php?module=faxmaster&op=showActionLog", "TEXT"=>"Action Log");
+
+        // Fill the links array
+        $links = array();
+        $links['repeat_nav_links'][] = $viewStats;     // view stats button
+
+        // Only show 'View Archive' button if user has permission to view the archive
+        if (Current_User::allow('faxmaster', 'viewArchive'))
+        $links['repeat_nav_links'][] = $viewArchive;  // view archive button
+
+        // Only show 'Settings' button if user has proper permissions
+        if (Current_User::allow('faxmaster', 'settings'))
+        $links['repeat_nav_links'][] = $settings;    // settings button
+
+        $links['repeat_nav_links'][] = $actionLog;
+
+        // Plug the navlinks into the navbar
+        $navLinks = PHPWS_Template::process($links, 'faxmaster', 'navLinks.tpl');
+        Layout::plug($navLinks, 'NAV_LINKS');
+    }
+}
 ?>
