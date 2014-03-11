@@ -2,7 +2,7 @@
     {SEARCH}
 </div>
 
-<table class="faxmaster_actionLogList" cellpadding="2">
+<table class="table table-striped">
     <tr>
 	<th>Fax Name</th>
         <th>Username</th>
@@ -15,8 +15,8 @@
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE}>
-	<td>{FAXNAME}</td>
+    <tr>
+	    <td>{FAXNAME}</td>
         <td>{USERNAME}</td>
         <td>{ACTIVITY}</td>
         <td>{TIMEPERFORMED}</td>

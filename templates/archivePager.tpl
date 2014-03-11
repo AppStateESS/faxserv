@@ -2,7 +2,7 @@
     {SEARCH}
 </div>
 
-<table class="faxmaster_faxPager" cellpadding="2">
+<table class="table table-striped">
     <tr>
         <th>File Name</th>
         <th>Sender Phone</th>
@@ -18,7 +18,7 @@
     </tr>
     <!-- END empty_table -->
     <!-- BEGIN listrows -->
-    <tr {TOGGLE} id="{id}_pagerRow">
+    <tr id="{id}_pagerRow">
         <td>{fileName}</td>
         <td>{senderPhone}</td>
         <td>{dateReceived}</td>
