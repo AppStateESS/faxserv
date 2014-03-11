@@ -15,10 +15,6 @@ class FaxPager {
         $this->pager->setModule('faxmaster');
         $this->pager->setLink('index.php?module=faxmaster');
 
-        // Zebra stripe the fax list
-        $this->pager->addToggle('class="bgcolor1"');
-        $this->pager->addToggle('class="bgcolor2"');
-
         // Don't show hidden faxes
         $this->pager->addWhere('hidden', 0);
 
@@ -32,9 +28,11 @@ class FaxPager {
             $this->pager->addWhere('archived', 1);
             $this->pager->setSearch('bannerId', 'firstName', 'lastName', 'whichArchive');
         } else {
+
             $this->pager->setTemplate('faxPager.tpl');
             $this->pager->setEmptyMessage('No faxes found.');
             $this->pager->addRowTags('pagerRowTags');
+            $this->pager->addPageTags(array('UNPRINTED_COUNT' => Fax::getUnprintedCount()));
             $this->pager->addWhere('archived', 0);
             $this->pager->setSearch('bannerId', 'firstName', 'lastName');
         }
@@ -47,12 +45,6 @@ class FaxPager {
         $tpl = array();
         $tpl['PAGER'] = $this->pager->get();
 
-        // Don't show the topbar when viewing the archive list
-        if (!$archive) {
-            $topBar = array();
-            $topBar['UNPRINTED_COUNT'] = Fax::getUnprintedCount();
-            $tpl['topBar'][] = $topBar;
-        }
 
         Layout::add(PHPWS_Template::process($tpl, 'faxmaster', 'faxList.tpl'));
     }

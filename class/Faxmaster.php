@@ -589,14 +589,29 @@ class Faxmaster {
         $links['repeat_nav_links'][] = $viewStats;     // view stats button
 
         // Only show 'View Archive' button if user has permission to view the archive
-        if (Current_User::allow('faxmaster', 'viewArchive'))
-        $links['repeat_nav_links'][] = $viewArchive;  // view archive button
+        if (Current_User::allow('faxmaster', 'viewArchive')) {
+            $links['repeat_nav_links'][] = $viewArchive;  // view archive button
+        }
 
         // Only show 'Settings' button if user has proper permissions
-        if (Current_User::allow('faxmaster', 'settings'))
-        $links['repeat_nav_links'][] = $settings;    // settings button
+        if (Current_User::allow('faxmaster', 'settings')) {
+            $links['repeat_nav_links'][] = $settings;    // settings button
+        }
 
         $links['repeat_nav_links'][] = $actionLog;
+
+        $links['BRAND'] = 'Fax Server';
+        $links['BRAND_LINK'] = 'index.php';
+
+        if (Current_User::isDeity()) {
+            $links['CONTROL_PANEL'] = PHPWS_Text::secureLink('Control Panel', 'controlpanel');
+            $links['ADMIN_OPTIONS'] = ''; //dummy tag to show dropdown menu in template
+        }
+
+        $links['USER_FULL_NAME'] = Current_User::getDisplayName();
+
+        $auth = Current_User::getAuthorization();
+        $links['LOGOUT_URI'] = $auth->logout_link;
 
         // Plug the navlinks into the navbar
         $navLinks = PHPWS_Template::process($links, 'faxmaster', 'navLinks.tpl');
