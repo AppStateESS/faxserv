@@ -23,3 +23,14 @@
     </tr>
     <!-- END listrows -->
 </table>
+
+<div class="row">
+  <div class="col-md-4 col-md-offset-4">
+    <p class="text-center">
+    {TOTAL_ROWS}<br />
+    {PAGE_LABEL} {PAGES}<br />
+    {LIMIT_LABEL} {LIMITS}<br />
+    {CSV_REPORT}
+    </p>
+  </div>
+</div>
