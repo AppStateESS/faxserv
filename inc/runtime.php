@@ -27,4 +27,8 @@
 if(!isset($_REQUEST['module'])){
     PHPWS_Core::initModClass('faxmaster', '../index.php');
 }
+
+if(!Current_User::isLogged()) {
+    Layout::add('<div class="text-center"><a href="secure" class="btn btn-lg btn-primary">Sign In</a></div>');
+}
 ?>
