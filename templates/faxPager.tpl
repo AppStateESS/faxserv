@@ -36,7 +36,6 @@ function handleDialogOk()
 
 function handleCallback(data, textStatus, jqXHR)
 {
-    console.log('in callback');
     if(data == "1"){
         $("#dialog").dialog('close');
         $("#" + elementId + "_bannerid").html(banner);
