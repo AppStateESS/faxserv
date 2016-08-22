@@ -160,7 +160,7 @@ class Fax {
     public function markAsPrinted(){
       //get username, timestamp, activity, and fax id
       $name = Current_User::getUsername();
-      $timestamp = mktime();
+      $timestamp = time();
       $activity = "marked as printed";
       $faxName = $this->getFileName();
       PHPWS_Core::initModClass('faxmaster','ActionLog.php');
@@ -175,7 +175,7 @@ class Fax {
     public function markAsHidden(){
       //get username, timestamp, activity, and fax id
       $name = Current_User::getUsername();
-      $timestamp = mktime();
+      $timestamp = time();
       $activity = "marked fax as hidden";
       $faxName = $this->getFileName();
       PHPWS_Core::initModClass('faxmaster','ActionLog.php');
